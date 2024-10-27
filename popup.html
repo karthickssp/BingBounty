@@ -13,29 +13,37 @@
         <h1>Bing Bounty</h1>
       </div>
       <div class="actions-body">
-       <div class="checkbox-wrapper-14">
-  <input id="focusTabs" type="checkbox" class="switch">
-  <label for="focusTabs">Focus Opened Tabs</label>
-</div>
+        <div class="actions">
+          <div class="checkbox-wrapper-14">
+            <label for="focusTabs">Focus Opened Tabs :</label>
+            <input id="focusTabs" type="checkbox" class="switch" />
+          </div>
+        </div>
+        <div class="actions">
+          <div class="input-number">
+            <label for="time">Number of Searches: </label>
+            <input type="number" id="time" name="time" min="1" max="200" />
+          </div>
+        </div>
       </div>
       <div class="actions-body">
-      <div class="actions">
-        <p>Start with custom timer:</p>
-        <button id="start-btn">Start Automation</button>
+        <div class="actions">
+          <p>Start with custom timer:</p>
+          <button id="start-btn">Start Automation</button>
+        </div>
+        <div class="actions">
+          <p>Start with loaded timer:</p>
+          <button id="start-btn">Start Automation</button>
+        </div>
+        <div class="actions">
+          <p>Start with no timer:</p>
+          <button id="start-btn">Start Automation</button>
+        </div>
+        <div class="actions">
+          <p>Stop all the running task:</p>
+          <button id="stop-btn">Stop Automation</button>
+        </div>
       </div>
-      <div class="actions">
-        <p>Start with loaded timer:</p>
-        <button id="start-btn">Start Automation</button>
-      </div>
-      <div class="actions">
-        <p>Start with no timer:</p>
-        <button id="start-btn">Start Automation</button>
-      </div>
-      <div class="actions">
-        <p>Stop all the running task:</p>
-        <button id="stop-btn">Stop Automation</button>
-      </div>
-    </div>
     </div>
     <script src="popup.js"></script>
   </body>
