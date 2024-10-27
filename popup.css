@@ -1,0 +1,66 @@
+body {
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container-body {
+  padding: 20px;
+  background: #ffffff;
+  width: 350px;
+}
+.header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.header img {
+  float: left;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.header h1 {
+  margin-left: 20px;
+  color: #0078d4;
+}
+
+.actions-body{
+  border-style: dashed;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: #0078d4;
+  margin-bottom: 5px;
+}
+.actions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.actions p {
+  float: left;
+  width: 200px;
+  font-weight: strong;
+  font-size: 16px;
+}
+
+.actions button {
+  margin-left: 20px;
+  color: black;
+  padding: 10px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+
+button:hover {
+  background-color: #005a9e;
+}
