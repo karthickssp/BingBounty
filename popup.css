@@ -37,6 +37,9 @@ body {
   border-radius: 10px;
   border-color: #0078d4;
   margin-bottom: 5px;
+  margin: 3px;
+  padding: 3px;
+  margin-bottom: 15px;
 }
 .actions{
   display: flex;
@@ -49,6 +52,7 @@ body {
   width: 200px;
   font-weight: strong;
   font-size: 16px;
+  font-weight: bold;
 }
 
 .actions button {
@@ -78,9 +82,9 @@ button:hover {
     --background: #fff;
     --disabled: #F6F8FF;
     --disabled-inner: #E1E6F9;
-    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     height: 21px;
     outline: none;
     display: inline-block;
