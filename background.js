@@ -1,57 +1,69 @@
-// background.js
-let dailySearches = 0;
-const maxDailySearches = 30;
-const uniqueTerms = new Set();  // Ensure unique terms for each day
+let searchInterval;
+let searchesRemaining = 0;
 
-// Generate random search term
-function generateRandomSearchTerm() {
-  const terms = ["example1", "example2", "example3", "example4"]; // Add more unique terms
-  let term;
-  do {
-    term = terms[Math.floor(Math.random() * terms.length)];
-  } while (uniqueTerms.has(term));
-  uniqueTerms.add(term);
-  return term;
+// Listen for messages from popup.js
+chrome.runtime.onMessage.addListener((message) => {
+  switch (message.action) {
+    case "startCustomTimer":
+      startAutomation(message.searchCount, message.customTimer);
+      break;
+    case "startPredefinedTimer":
+      const predefinedTimer = 5000; // Set a predefined interval, e.g., 5 seconds
+      startAutomation(message.searchCount, predefinedTimer);
+      break;
+    case "startNoTimer":
+      startNoTimerAutomation(message.searchCount);
+      break;
+    case "stopAutomation":
+      stopAutomation();
+      break;
+    default:
+      console.log("Unknown action:", message.action);
+  }
+});
+
+// Start automation with a given timer
+function startAutomation(searchCount, timer) {
+  clearInterval(searchInterval); // Clear any existing interval
+  searchesRemaining = searchCount;
+
+  searchInterval = setInterval(() => {
+    if (searchesRemaining <= 0) {
+      stopAutomation();
+      alert("Search automation completed.");
+    } else {
+      performSearch();
+      searchesRemaining--;
+    }
+  }, timer);
+}
+
+// Start automation with no timer (all searches at once)
+function startNoTimerAutomation(searchCount) {
+  for (let i = 0; i < searchCount; i++) {
+    performSearch();
+  }
+  alert("One-time search automation completed.");
 }
 
 // Perform a Bing search
 function performSearch() {
-  if (dailySearches < maxDailySearches) {
-    const searchTerm = generateRandomSearchTerm();
-    chrome.tabs.create({
-      url: `https://www.bing.com/search?q=${encodeURIComponent(searchTerm)}`,
-      active: false
-    });
-    dailySearches++;
-  }
+  const query = generateRandomSearchQuery();
+  const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+
+  chrome.storage.sync.get("focusTabs", (data) => {
+    chrome.tabs.create({ url, active: data.focusTabs || false });
+  });
 }
 
-// Control the search frequency
-function startSearchAutomation() {
-  const searchInterval = setInterval(() => {
-    if (dailySearches >= maxDailySearches) {
-      clearInterval(searchInterval);
-    } else {
-      performSearch();
-    }
-  }, 5 * 60 * 1000); // 5 minutes interval
+// Generate a random search query for Bing
+function generateRandomSearchQuery() {
+  const topics = ["technology", "science", "space", "movies", "health", "sports"];
+  return topics[Math.floor(Math.random() * topics.length)] + " " + Date.now();
 }
 
-// Reset searches each day
-chrome.alarms.create("resetDailySearches", { when: Date.now(), periodInMinutes: 1440 });
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "resetDailySearches") {
-    dailySearches = 0;
-    uniqueTerms.clear();
-  }
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "start") {
-        startSearchAutomation();
-        sendResponse({status: "Started"});
-    } else if (message.action === "stop") {
-        clearInterval(searchInterval);
-        sendResponse({status: "Stopped"});
-    }
-});
+// Stop all automation tasks
+function stopAutomation() {
+  clearInterval(searchInterval);
+  searchesRemaining = 0;
+}
