@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((message) => {
       startAutomation(message.searchCount, message.customTimer);
       break;
     case "startPredefinedTimer":
-      const predefinedTimer = 5000; // Set a predefined interval, e.g., 5 seconds
+      const predefinedTimer = 1000; // Set a predefined interval, e.g., 1 seconds
       startAutomation(message.searchCount, predefinedTimer);
       break;
     case "startNoTimer":
@@ -43,7 +43,7 @@ function startNoTimerAutomation(searchCount) {
   for (let i = 0; i < searchCount; i++) {
     performSearch();
   }
-  alert("One-time search automation completed.");
+  console.log("One-time search automation completed.");
 }
 
 // Perform a Bing search
@@ -59,7 +59,7 @@ function performSearch() {
 // Generate a random search query for Bing
 function generateRandomSearchQuery() {
   const topics = ["technology", "science", "space", "movies", "health", "sports"];
-  return topics[Math.floor(Math.random() * topics.length)] + " " + Date.now();
+  return topics[Math.floor(Math.random() * topics.length)];
 }
 
 // Stop all automation tasks

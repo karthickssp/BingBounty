@@ -22,7 +22,7 @@ saveButton.addEventListener("click", () => {
     searchCount: searchCountInput.value,
     customTimer: customTimerInput.value,
   }, () => {
-    alert("Settings saved!");
+    console.log("Settings saved!");
   });
 });
 
@@ -37,7 +37,7 @@ startBtnCustomTimer.addEventListener("click", () => {
   }
 
   chrome.runtime.sendMessage({ action: "startCustomTimer", customTimer, searchCount });
-  alert("Custom-timer automation started.");
+  console.log("Custom-timer automation started.");
 });
 
 // Start automation with predefined timer
@@ -45,7 +45,7 @@ startBtnPredefinedTimer.addEventListener("click", () => {
   const searchCount = parseInt(searchCountInput.value, 10);
 
   chrome.runtime.sendMessage({ action: "startPredefinedTimer", searchCount });
-  alert("Predefined-timer automation started.");
+  console.log("Predefined-timer automation started.");
 });
 
 // Start automation without timer
@@ -53,11 +53,11 @@ startBtnNoTimer.addEventListener("click", () => {
   const searchCount = parseInt(searchCountInput.value, 10);
 
   chrome.runtime.sendMessage({ action: "startNoTimer", searchCount });
-  alert("No-timer automation started.");
+  console.log("No-timer automation started.");
 });
 
 // Stop all automation tasks
 stopBtn.addEventListener("click", () => {
   chrome.runtime.sendMessage({ action: "stopAutomation" });
-  alert("All automation tasks stopped.");
+  console.log("All automation tasks stopped.");
 });
