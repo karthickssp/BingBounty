@@ -11,7 +11,7 @@ body {
 .container-body {
   padding: 20px;
   background: #ffffff;
-  width: 350px;
+  width: 360px;
 }
 .header{
   display: flex;
@@ -36,16 +36,16 @@ body {
   border-width: 2px;
   border-radius: 10px;
   border-color: #0078d4;
-  margin-bottom: 5px;
   margin: 3px;
   padding: 3px;
   margin-bottom: 15px;
 }
 .actions{
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   margin-bottom: 10px;
+  padding-left: 5px;
 }
 .actions p {
   float: left;
@@ -54,7 +54,18 @@ body {
   font-size: 16px;
   font-weight: bold;
 }
-
+.actions label {
+  float: left;
+  width: 250px;
+  font-weight: strong;
+  font-size: 16px;
+  font-weight: bold;
+}
+.actions input {
+  float: left;
+  width: 50px;
+  border-radius: 5px;
+}
 .actions button {
   margin-left: 20px;
   color: black;
@@ -76,7 +87,7 @@ select:focus{
   outline:none;
 }
 input[type="number"] {
-  padding: 3px 5px 2px;
+  padding: 3px 2px 1px;
   border-radius: 5px;
 }
 
@@ -94,7 +105,7 @@ input[type="number"] {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    height: 21px;
+    height: 24px;
     outline: none;
     display: inline-block;
     vertical-align: top;
@@ -139,7 +150,7 @@ input[type="number"] {
     box-shadow: 0 0 0 var(--focus);
   }
   .checkbox-wrapper-14 input[type=checkbox]:not(.switch) {
-    width: 21px;
+    width: 24px;
   }
   .checkbox-wrapper-14 input[type=checkbox]:not(.switch):after {
     opacity: var(--o, 0);
@@ -171,21 +182,21 @@ input[type="number"] {
     --r: 43deg;
   }
   .checkbox-wrapper-14 input[type=checkbox].switch {
-    width: 38px;
+    width: 55px;
     border-radius: 11px;
   }
   .checkbox-wrapper-14 input[type=checkbox].switch:after {
-    left: 2px;
-    top: 2px;
+    left: 3px;
+    top: 3px;
     border-radius: 50%;
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
     background: var(--ab, var(--border));
     transform: translateX(var(--x, 0));
   }
   .checkbox-wrapper-14 input[type=checkbox].switch:checked {
     --ab: var(--active-inner);
-    --x: 17px;
+    --x: 30px;
   }
   .checkbox-wrapper-14 input[type=checkbox].switch:disabled:not(:checked):after {
     opacity: 0.6;
