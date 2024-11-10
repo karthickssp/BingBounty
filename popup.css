@@ -60,16 +60,25 @@ body {
   color: black;
   padding: 10px 10px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 10px;
   margin: 10px 0;
 }
-
 
 button:hover {
   background-color: #005a9e;
 }
 
-
+select{
+  padding: 3px 10px;
+  border-radius:5px;
+}
+select:focus{
+  outline:none;
+}
+input[type="number"] {
+  padding: 3px 5px 2px;
+  border-radius: 5px;
+}
 
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
@@ -77,7 +86,7 @@ button:hover {
     --active: #0078d4;
     --active-inner: #fff;
     --focus: 2px rgba(39, 94, 254, .3);
-    --border: #BBC1E1;
+    --border: #2949ff;
     --border-hover: #275EFE;
     --background: #fff;
     --disabled: #F6F8FF;
