@@ -17,6 +17,9 @@ chrome.runtime.onMessage.addListener((message) => {
     case "stopAutomation":
       stopAutomation();
       break;
+    case "closeTabs":
+      closeAutomation();
+      break;
     default:
       console.log("Unknown action:", message.action);
   }
@@ -66,4 +69,16 @@ function generateRandomSearchQuery() {
 function stopAutomation() {
   clearInterval(searchInterval);
   searchesRemaining = 0;
+}
+
+// Close all other opened tabs
+function closeAutomation() {
+  chrome.tabs.query({}, (tabs) => {
+    const currentTab = tabs.find((tab) => tab.active);
+    tabs.forEach((tab) => {
+      if (tab.id !== currentTab.id) {
+        chrome.tabs.remove(tab.id);
+      }
+    });
+  });
 }

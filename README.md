@@ -11,7 +11,7 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Configuration](#configuration)
+- [Configuration](#configurations)
 - [Contribution](#contribution)
 - [License](#license)
 
@@ -31,5 +31,6 @@
 
 1. **Clone the Repository**  
    Clone the repository to your local machine using:
+
    ```bash
    git clone https://github.com/karthickssp/BingBounty.git

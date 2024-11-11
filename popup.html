@@ -13,32 +13,41 @@
         <h1>Bing Bounty</h1>
       </div>
       <div class="actions-body">
+        <!-- Checkbox for Focus Tabs -->
         <div class="actions">
           <div class="checkbox-wrapper-14">
-            <label for="focusTabs">Focus Tabs :</label>
+            <label for="focusTabs">Focus Tabs:</label>
             <input id="focusTabs" type="checkbox" class="switch" />
           </div>
         </div>
+        
+        <!-- Dropdown for Search Count -->
         <div class="actions">
           <div class="input-dropdown">
-            <label for="searchCount">Searches: </label>
+            <label for="searchCount">Searches:</label>
             <select id="searchCount" name="searchCount">
               <option value="0" selected>0</option>
               <option value="10">10</option>
               <option value="30">30</option>
             </select>
           </div>
-        </div>        
+        </div>
+        
+        <!-- Timer Input Field -->
         <div class="actions">
           <div class="input-number">
-            <label for="time">Timer:</label>
-            <input type="number" id="time" name="time" min="1" max="2000" />
+            <label for="timer">Timer (sec):</label>
+            <input type="number" id="timer" name="timer" min="1" max="20000" placeholder="Enter timer in seconds" />
           </div>
         </div>
+        
+        <!-- Save Button -->
         <div class="actions">
           <button id="save-btn">Save Content</button>
         </div>
       </div>
+      
+      <!-- Automation Controls -->
       <div class="actions-body">
         <div class="actions">
           <p>Custom timer:</p>
@@ -53,8 +62,12 @@
           <button id="start-btn-3">Start Automation</button>
         </div>
         <div class="actions">
-          <p>Stop all task:</p>
+          <p>Stop all tasks:</p>
           <button id="stop-btn">Stop Automation</button>
+        </div>
+        <div class="actions">
+          <p>Close all tabs:</p>
+          <button id="close-btn">Close Automation</button>
         </div>
       </div>
     </div>
