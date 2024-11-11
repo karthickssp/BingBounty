@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "BING BOUNTY",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "description": "Automate Bing searches to earn Edge points with daily and rate limits.",
     "permissions": ["storage", "alarms", "activeTab", "scripting", "tabs"],
     "background": {
