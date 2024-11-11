@@ -77,5 +77,5 @@
 ## Screenshots
 
 ![Logo](images/icon.png)  
-![Result](images/Final-Out.png)  
+![Result](images/Final_Out.png)  
    
