@@ -1,6 +1,9 @@
 # BingBounty
 
-![Logo](images/icon.png)  
+<div align="center">
+  <img src="images/icon.png" alt="Logo">
+</div>
+
 
 **BingBounty** is a Microsoft Edge extension designed to automate Bing searches, helping users maximize their rewards effortlessly within daily and periodic limits. Set it up, sit back, and watch your points increase automatically!
 
@@ -75,7 +78,11 @@
 ---
 
 ## Screenshots
-
-![Logo](images/icon.png)  
-![Result](images/Final_Out.png)  
+<div align="center">
+  <img src="images/icon.png" alt="Logo">
+</div>
+<br/><hr/>
+<div align="center">
+  <img src="images/Final_Out.png" alt="Logo">
+</div>
    
