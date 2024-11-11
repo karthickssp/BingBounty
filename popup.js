@@ -14,6 +14,9 @@ chrome.storage.sync.get(["focusTabs", "searchCount", "customTimer"], (data) => {
   focusTabsCheckbox.checked = data.focusTabs || false;
   searchCountDropdown.value = data.searchCount || 0;
   customTimerInput.value = data.customTimer || 0;
+  console.log("focusTabs: ", focusTabsCheckbox.checked);
+  console.log("searchCount: ", searchCountDropdown.value);
+  console.log("customTimer: ", customTimerInput.value);
 });
 
 // Save settings to Chrome storage
@@ -23,6 +26,9 @@ saveButton.addEventListener("click", () => {
     searchCount: searchCountDropdown.value,
     customTimer: customTimerInput.value,
   }, () => {
+    console.log("focusTabs: ", focusTabsCheckbox.checked);
+    console.log("searchCount: ", searchCountDropdown.value);
+    console.log("customTimer: ", customTimerInput.value);
     console.log("Settings saved!");
   });
 });
@@ -36,8 +42,8 @@ startBtnCustomTimer.addEventListener("click", () => {
     alert("Please enter a valid timer and search count.");
     return;
   }
+  console.log("Custom-timer automation is triggered.");
   chrome.runtime.sendMessage({ action: "startCustomTimer", customTimer, searchCount });
-  console.log("Custom-timer automation started.");
   console.log("Custom Timer: ", customTimer);
   console.log("Search Count: ", searchCount);
 });
@@ -49,8 +55,8 @@ startBtnPredefinedTimer.addEventListener("click", () => {
     alert("Please enter a valid search count.");
     return;
   }
+  console.log("Predefined-timer automation is triggered.");
   chrome.runtime.sendMessage({ action: "startPredefinedTimer", searchCount });
-  console.log("Predefined-timer automation started.");
 });
 
 // Start automation without timer
@@ -60,18 +66,18 @@ startBtnNoTimer.addEventListener("click", () => {
     alert("Please enter a valid search count.");
     return;
   }
+  console.log("No-timer automation is triggered.");
   chrome.runtime.sendMessage({ action: "startNoTimer", searchCount });
-  console.log("No-timer automation started.");
 });
 
 // Stop all automation tasks
 stopBtn.addEventListener("click", () => {
+  console.log("Stop Automation is triggered.");
   chrome.runtime.sendMessage({ action: "stopAutomation" });
-  console.log("All automation tasks stopped.");
 });
 
 // Close all other opened tabs
 closeBtn.addEventListener("click", () => {
+  console.log("Close Automation is triggered.");
   chrome.runtime.sendMessage({ action: "closeTabs" });
-  console.log("All other tabs closed.");
 });

@@ -164,16 +164,17 @@ chrome.runtime.onMessage.addListener((message) => {
 
 // Start automation with a custom timer
 function startCustomAutomation(searchCount, timer) {
-  clearInterval(searchInterval); // Clear any existing interval
+  clearInterval(searchInterval);
   searchesRemaining = searchCount;
 
   searchInterval = setInterval(() => {
     if (searchesRemaining <= 0) {
       stopAutomation();
-      console.log("Search automation with custom timer is completed.");
+      console.log("Search automation with custom timer is completed successfully.");
     } else {
       performSearch();
       searchesRemaining--;
+      console.log(`Searches remaining: ${searchesRemaining}`);
     }
   }, timer);
 }
@@ -181,8 +182,8 @@ function startCustomAutomation(searchCount, timer) {
 // Start automation with a predefined timer
 function startPreDefinedAutomation(searchCount) {
   clearInterval(searchInterval);
-  searchesRemaining = searchCount; // Set the remaining searches to the count passed
-  searchesThisCycle = 0; // Reset the cycle counter
+  searchesRemaining = searchCount;
+  searchesThisCycle = 0;
   initiateSearchCycle();
 }
 
@@ -190,7 +191,7 @@ function startPreDefinedAutomation(searchCount) {
 function initiateSearchCycle() {
   if (searchesRemaining <= 0) {
     stopAutomation();
-    console.log("Search automation with predefined time is completed.");
+    console.log("Search automation with predefined time is completed successfully.");
     return;
   }
 
@@ -202,13 +203,16 @@ function initiateSearchCycle() {
         searchesRemaining--;
         searchesThisCycle++;
       }
-    }, i * 15000); // Delay for 15 seconds between searches (45 seconds total for 3 searches)
+      console.log(`Searches remaining: ${searchesRemaining}`);
+    }, i * 15000); // 15 seconds interval
+    console.log(`Search cycle: (${searchesThisCycle}/${maxSearchesPerCycle})`);
   }
 
   // After completing 3 searches, wait for 15 minutes before starting the next cycle
   setTimeout(() => {
     if (searchesRemaining > 0) {
-      initiateSearchCycle(); // Start the next cycle of 3 searches
+      initiateSearchCycle();
+      console.log("Search cycle completed. Starting the next cycle.");
     }
   }, restPeriod); // Wait for 15 minutes (900000 ms)
 }
@@ -218,7 +222,7 @@ function startNoTimerAutomation(searchCount) {
   for (let i = 0; i < searchCount; i++) {
     performSearch();
   }
-  console.log("One-time search automation completed.");
+  console.log("One-time search automation completed successfully.");
 }
 
 // Perform a Bing search
@@ -229,6 +233,7 @@ function performSearch() {
   chrome.storage.sync.get("focusTabs", (data) => {
     chrome.tabs.create({ url, active: data.focusTabs || false });
   });
+  console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
 }
 
 // Generate a search query based on the current date with 930 unique words
@@ -243,7 +248,7 @@ function stopAutomation() {
   clearInterval(searchInterval);
   searchesRemaining = 0;
   searchesThisCycle = 0;
-  console.log("All running tasks are stopped.");
+  console.log("All running tasks are stopped successfully.");
 }
 
 // Close all other opened tabs
@@ -251,13 +256,12 @@ function closeAutomation() {
   chrome.tabs.query({}, (tabs) => {
     const currentTab = tabs.find((tab) => tab.active);
     if (currentTab) {
-      // Ensure currentTab exists
       tabs.forEach((tab) => {
         if (tab.id !== currentTab.id) {
           chrome.tabs.remove(tab.id);
         }
       });
-      console.log("All other tabs are closed.");
+      console.log("All other tabs are closed successfully.");
     }
   });
 }
