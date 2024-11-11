@@ -12,19 +12,21 @@
         <img src="images/icon.png" alt="Logo" />
         <h1>Bing Bounty</h1>
       </div>
-      <div class="actions-body">
+      <div class="actions-body-first">
         <!-- Checkbox for Focus Tabs -->
-        <div class="actions">
+        <div class="actions-top">
           <div class="checkbox-wrapper-14">
             <label for="focusTabs">Focus Tabs:</label>
+            <br /><br />
             <input id="focusTabs" type="checkbox" class="switch" />
           </div>
         </div>
-        
+
         <!-- Dropdown for Search Count -->
-        <div class="actions">
+        <div class="actions-top">
           <div class="input-dropdown">
             <label for="searchCount">Searches:</label>
+            <br /><br />
             <select id="searchCount" name="searchCount">
               <option value="0" selected>0</option>
               <option value="3">3</option>
@@ -33,21 +35,28 @@
             </select>
           </div>
         </div>
-        
+
         <!-- Timer Input Field -->
-        <div class="actions">
+        <div class="actions-top">
           <div class="input-number">
             <label for="timer">Timer (sec):</label>
-            <input type="number" id="timer" name="timer" min="1" max="20000" placeholder="Enter timer in seconds" />
+            <br /><br />
+            <input
+              type="number"
+              id="timer"
+              name="timer"
+              min="1"
+              max="20000"
+              placeholder="Enter timer"
+            />
           </div>
         </div>
-        
-        <!-- Save Button -->
-        <div class="actions">
-          <button id="save-btn">Save Content</button>
-        </div>
       </div>
-      
+      <!-- Save Button -->
+      <div class="actions">
+        <button id="save-btn">Save Content</button>
+      </div>
+
       <!-- Automation Controls -->
       <div class="actions-body">
         <div class="actions">
@@ -71,6 +80,20 @@
           <button id="close-btn">Close Automation</button>
         </div>
       </div>
+      <footer>
+        <div class="footer">
+          <p class="footer-text">Designed & Developed with <span class="text-danger">♥</span>
+            by
+            <a
+              href="https://www.linkedin.com/in/karthickssp-90805v96570/"
+              target="_blank"
+              >Karthick SSP</a
+            >.</p>
+          <a href="https://github.com/karthickssp" target="_blank" class="footer-link">
+            <img src="images/GithubLogo.png" alt="GitHub" class="github-logo" />
+          </a>
+        </div>
+      </footer>
     </div>
     <script src="popup.js"></script>
   </body>
