@@ -1,9 +1,8 @@
 # BingBounty
 
 <div align="center">
-  <img src="images/icon.png" alt="Logo">
+  ![Logo](images/icon.png)
 </div>
-
 
 **BingBounty** is a Microsoft Edge extension designed to automate Bing searches, helping users maximize their rewards effortlessly within daily and periodic limits. Set it up, sit back, and watch your points increase automatically!
 
@@ -36,6 +35,8 @@
    ```bash
    git clone https://github.com/karthickssp/BingBounty.git
    cd BingBounty
+   ```
+
 2. **Load the Extension in Microsoft Edge**  
    - Open Microsoft Edge and navigate to `edge://extensions/`.
    - Enable **Developer mode** in the bottom left corner.
@@ -78,6 +79,7 @@
 ---
 
 ## Screenshots
+
 <div align="center">
   <img src="images/icon.png" alt="Logo">
 </div>
@@ -85,4 +87,3 @@
 <div align="center">
   <img src="images/Final_Out.png" alt="Logo">
 </div>
-   
