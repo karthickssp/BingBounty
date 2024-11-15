@@ -181,7 +181,7 @@ const topics = [
 const today = new Date().toDateString();
 const start = Math.max((new Date().getDate() - 1) * 30, 0);
 const end = Math.min(start + 30, topics.length);
-const desktopTopics = topics.slice(start, end);
+const dayTopics = topics.slice(start, end);
 
 // Chrome message listener
 chrome.runtime.onMessage.addListener((message) => {
@@ -205,16 +205,106 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 function startCustomAutomation(searchCount, timer) {
-    clearInterval(searchInterval);
-    searchesRemaining = searchCount;
-    searchInterval = setInterval(() => {
-        if (searchesRemaining <= 0) {
-            stopAutomation();
-        } else {
-            performDesktopSearch();
-            searchesRemaining--;
+  clearInterval(searchInterval);
+  searchesRemaining = searchCount;
+
+  searchInterval = setInterval(() => {
+    if (searchesRemaining <= 0) {
+      stopAutomation();
+      console.log("Search automation with custom timer is completed successfully.");
+    } else {
+      performSearch();
+      searchesRemaining--;
+      console.log(`Searches remaining: ${searchesRemaining}`);
+    }
+  }, timer);
+}
+
+// Start automation with a predefined timer
+function startPreDefinedAutomation(searchCount) {
+  clearInterval(searchInterval);
+  searchesRemaining = searchCount;
+  searchesThisCycle = 0;
+  initiateSearchCycle();
+}
+
+// Initiates a cycle of 3 searches with a 15-second interval
+function initiateSearchCycle() {
+  if (searchesRemaining <= 0) {
+    stopAutomation();
+    console.log("Search automation with predefined time is completed successfully.");
+    return;
+  }
+
+  // Perform 3 searches with 15 seconds interval (15 seconds per search)
+  for (let i = 0; i < maxSearchesPerCycle; i++) {
+    setTimeout(() => {
+      if (searchesRemaining > 0) {
+        performSearch();
+        searchesRemaining--;
+        searchesThisCycle++;
+      }
+      console.log(`Searches remaining: ${searchesRemaining}`);
+    }, i * 15000); // 15 seconds interval
+    console.log(`Search cycle: (${searchesThisCycle}/${maxSearchesPerCycle})`);
+  }
+
+  // After completing 3 searches, wait for 15 minutes before starting the next cycle
+  setTimeout(() => {
+    if (searchesRemaining > 0) {
+      initiateSearchCycle();
+      console.log("Search cycle completed. Starting the next cycle.");
+    }
+  }, restPeriod); // Wait for 15 minutes (900000 ms)
+}
+
+// Start automation with no timer (open all tabs at once)
+function startNoTimerAutomation(searchCount) {
+  for (let i = 0; i < searchCount; i++) {
+    performSearch();
+  }
+  console.log("One-time search automation completed successfully.");
+}
+
+// Perform a Bing search
+function performSearch() {
+  const query = generateSearchQuery();
+  const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+
+  chrome.storage.sync.get("focusTabs", (data) => {
+    chrome.tabs.create({ url, active: data.focusTabs || false });
+  });
+  chrome.runtime.sendMessage({ action: "incrementsearchCount" });
+  console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
+}
+
+// Generate a search query based on the current date with 930 unique words
+function generateSearchQuery() {
+  const query = dayTopics[currentIndex];
+  currentIndex = (currentIndex + 1) % dayTopics.length;
+  return query;
+}
+
+// Stop all automation tasks
+function stopAutomation() {
+  clearInterval(searchInterval);
+  searchesRemaining = 0;
+  searchesThisCycle = 0;
+  console.log("All running tasks are stopped successfully.");
+}
+
+// Close all other opened tabs
+function closeAutomation() {
+  chrome.tabs.query({}, (tabs) => {
+    const currentTab = tabs.find((tab) => tab.active);
+    if (currentTab) {
+      tabs.forEach((tab) => {
+        if (tab.id !== currentTab.id) {
+          chrome.tabs.remove(tab.id);
         }
-    }, timer);
+      });
+    }
+  });
 }
 
 async function startPreDefinedAutomation(searchCount) {

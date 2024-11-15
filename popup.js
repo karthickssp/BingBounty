@@ -169,48 +169,80 @@ document.addEventListener("DOMContentLoaded", () => {
 // Start automation with custom timer
 startBtnCustomTimer.addEventListener("click", () => {
   const customTimer = parseInt(customTimerInput.value, 10) * 1000;
-  const searchCount = parseInt(searchCountDropdown.value, 10);
+  const newSearchLimit = parseInt(searchCountDropdown.value, 10);
 
-  if (isNaN(customTimer) || isNaN(searchCount) || customTimer <= 0 || searchCount <= 0) {
+  if (
+    isNaN(customTimer) ||
+    isNaN(newSearchLimit) ||
+    customTimer <= 0 ||
+    newSearchLimit <= 0
+  ) {
     alert("Please enter a valid timer and search count.");
     return;
   }
+
+  searchCount = 0; // Reset view count for new automation session
+  searchLimit = newSearchLimit;
+  updateUI();
+
   console.log("Custom-timer automation is triggered.");
-  chrome.runtime.sendMessage({ action: "startCustomTimer", customTimer, searchCount });
-  console.log("Custom Timer: ", customTimer);
-  console.log("Search Count: ", searchCount);
+  chrome.runtime.sendMessage({
+    action: "startCustomTimer",
+    customTimer,
+    searchCount: searchLimit,
+  });
 });
 
 // Start automation with predefined timer
 startBtnPredefinedTimer.addEventListener("click", () => {
-  const searchCount = parseInt(searchCountDropdown.value, 10);
-  if (isNaN(searchCount) || searchCount <= 0) {
+  const newSearchLimit = parseInt(searchCountDropdown.value, 10);
+  if (isNaN(newSearchLimit) || newSearchLimit <= 0) {
     alert("Please enter a valid search count.");
     return;
   }
+
+  searchCount = 0;
+  searchLimit = newSearchLimit;
+  updateUI();
+
   console.log("Predefined-timer automation is triggered.");
-  chrome.runtime.sendMessage({ action: "startPredefinedTimer", searchCount });
+  chrome.runtime.sendMessage({ action: "startPredefinedTimer", searchCount: searchLimit });
 });
 
 // Start automation without timer
 startBtnNoTimer.addEventListener("click", () => {
-  const searchCount = parseInt(searchCountDropdown.value, 10);
-  if (isNaN(searchCount) || searchCount <= 0) {
+  const newSearchLimit = parseInt(searchCountDropdown.value, 10);
+  if (isNaN(newSearchLimit) || newSearchLimit <= 0) {
     alert("Please enter a valid search count.");
     return;
   }
+
+  searchCount = 0;
+  searchLimit = newSearchLimit;
+  updateUI();
+
   console.log("No-timer automation is triggered.");
-  chrome.runtime.sendMessage({ action: "startNoTimer", searchCount });
+  chrome.runtime.sendMessage({ action: "startNoTimer", searchCount: searchLimit });
 });
 
 // Stop all automation tasks
 stopBtn.addEventListener("click", () => {
   console.log("Stop Automation is triggered.");
   chrome.runtime.sendMessage({ action: "stopAutomation" });
+  searchCount = 0; // Reset view count when stopped
+  updateUI();
 });
 
 // Close all other opened tabs
 closeBtn.addEventListener("click", () => {
   console.log("Close Automation is triggered.");
   chrome.runtime.sendMessage({ action: "closeTabs" });
+});
+
+// Listener for background messages to update progress
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "incrementsearchCount") {
+    searchCount += 1;
+    updateUI(); 
+  }
 });
