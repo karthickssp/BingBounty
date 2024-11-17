@@ -12,7 +12,7 @@
         <img src="images/icon.png" alt="Logo" />
         <h1>Bing Bounty</h1>
       </div>
-      <div class="actions-body-first">
+      <div class="container-top">
         <!-- Checkbox for Focus Tabs -->
         <div class="actions-top">
           <div class="checkbox-wrapper-14">
@@ -28,22 +28,33 @@
             <label for="searchCount">Searches:</label>
             <br /><br />
             <select id="searchCount" name="searchCount">
-              <option value="0" selected>0</option>
-              <option value="3">3</option>
-              <option value="10">10</option>
-              <option value="30">30</option>
+              <option value="0" selected>00 words</option>
+              <option value="3">03 words</option>
+              <option value="10">10 words</option>
+              <option value="20">20 words</option>
+              <option value="30">30 words</option>
             </select>
           </div>
         </div>
 
         <!-- Timer Input Field -->
         <div class="actions-top">
-          <div class="input-number">
-            <label for="timer">Timer (sec):</label>
+          <div class="input-dropdown">
+            <label for="customTimerInput">Timer (sec):</label>
             <br /><br />
+            <select id="timerDropdown" name="customTimerInput" title="Select Timer">
+              <option value="3">3 seconds</option>
+              <option value="5">5 seconds</option>
+              <option value="8">8 seconds</option>
+              <option value="10">10 seconds</option>
+              <option value="12">12 seconds</option>
+              <option value="15">15 seconds</option>
+              <option value="18">18 seconds</option>
+              <option value="custom">Custom</option>
+            </select>
             <input
               type="number"
-              id="timer"
+              id="customTimerInput"
               name="timer"
               min="1"
               max="20000"
@@ -91,6 +102,15 @@
               >Karthick SSP</a
             >.</p>
           <a href="https://github.com/karthickssp" target="_blank" class="footer-link" rel="noopener">
+              >Karthick</a
+            >.
+          </p>
+          <a
+            href="https://github.com/karthickssp/BingBounty"
+            target="_blank"
+            class="footer-link"
+            rel="noopener"
+          >
             <img src="images/GithubLogo.png" alt="GitHub" class="github-logo" />
           </a>
         </div>

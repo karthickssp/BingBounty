@@ -1,8 +1,8 @@
 let searchInterval;
 let searchesRemaining = 0;
 let currentIndex = 0;
-let searchesThisCycle = 0; // Track searches in the current cycle
-const maxSearchesPerCycle = 3; // Perform 3 searches within the 15 minutes
+let searchesThisCycle = 0;
+const maxSearchesPerCycle = 3;
 const restPeriod = 900000; // 15 minutes in milliseconds (900,000)
 
 const topics = [
@@ -49,28 +49,49 @@ const topics = [
   "seismic", "solstice", "species", "spectrum", "sperm", "spinal", "spore", "sterilization", "stratosphere", "subspecies",
   "sunspot", "surface", "symbiosis", "synthesis", "taxonomy", "telescopic", "temperature", "terrestrial", "topography",
   "toxicity", "transistor", "turbine", "ultraviolet", "vascular", "vector", "velocity", "vibration", "virus", "volcano",
-  "wavelength", "weather", "xenon", "yield", "yolk", "zoology", "absorption", "acoustics", "adaptation", "airflow",
-  "airmass", "alveoli", "amplitude", "angstrom", "antibody", "antigen", "antiseptic", "anvil", "arc", "archaeology",
-  "artery", "ash", "asterism", "atmosphere", "atom", "bacteriophage", "bar", "baseline", "beaker", "behavior",
-  "bell", "bioinformatics", "biome", "bipolar", "bit", "biogeography", "biophysics", "botanical", "cadmium",
-  "calorie", "capillary", "capsid", "carbonyl", "carotenoid", "cartilage", "catalysis", "catheter", "cellular",
-  "cephalopod", "charge", "chloride", "chordate", "chromatography", "cloning", "cognitive", "colloid", "commensal",
-  "congenital", "conservation", "continental", "crust", "cybernetics", "dendrology", "density", "detonation",
-  "dialysis", "dielectric", "diffraction", "digital", "diode", "distill", "dopamine", "double", "ecological",
-  "ejection", "elasticity", "electrolysis", "endocrine", "energy", "epigenetics", "erosion", "ethology", "evaporation",
-  "evolution", "exponential", "exposure", "fermentation", "field", "filament", "filter", "fireball", "fission",
-  "flora", "folding", "frequency", "fusion", "genetics", "genome", "geochemistry", "glucose", "granite", "greenhouse",
-  "hematology", "hemisphere", "herbaceous", "hertz", "hydrosphere", "ionize", "ions", "iron", "isotonic", "joule",
-  "kelvin", "keystone", "latitude", "lignite", "liquid", "magma", "magnesium", "magnet", "mars", "melanin",
-  "membrane", "mendelevium", "metabolism", "metamorphic", "methane", "microscope", "mitosis", "mole", "momentum",
-  "mutation", "natural", "nerve", "neutron", "noble", "node", "nucleus", "nutrient", "oceanography", "optics",
-  "osmosis", "oxidant", "oxygen", "parasitology", "particle", "period", "phosphorus", "physiology", "pollination",
-  "polymer", "potassium", "pyramid", "pyrite", "radar", "radiocarbon", "radiology", "radiowave", "recycling",
-  "respiration", "seismology", "sequence", "silica", "sodium", "soil", "species", "spectrograph", "subduction",
-  "sulfur", "sustainable", "synthesis", "tectonics", "temperature", "thrombosis", "transpiration", "trophic",
-  "ultrasound", "vertebrate", "virus", "vortex", "wave", "weather", "wavelength", "xylem", "yield", "yolk", "zoological",
-  "algorithm", "antibody", "architecture", "asteroid", "bacterium", "biodiversity", "biosphere", "blockchain",
-  "calculus", "catalyst", "cellulose", "chromosome", "climate", "cognition", "computation", "conifer",
+  "wavelength", "weather", "xenon", "yield", "yolk", "zoological", "algorithm", "antibody", "architecture", "asteroid",
+  "bacterium", "biodiversity", "biosphere", "blockchain", "calculus", "catalyst", "cellulose", "chromosome", "climate",
+  "cognition", "computation", "conifer", "corrosion", "cybersecurity", "data", "database", "decibel", "dendrite", "density",
+  "deposition", "ecosystem", "electricity", "enzyme", "evolution", "galaxy", "genome", "geothermal", "gravity", "hemoglobin",
+  "hormone", "hydrology", "inertia", "intelligence", "isotope", "kinetics", "lightyear", "molecule", "nanotechnology",
+  "nucleus", "optics", "organism", "paleontology", "photosynthesis", "physics", "plasma", "protein", "quantum", "radiation",
+  "respiration", "robotics", "satellite", "simulation", "solar", "spectrum", "sustainability", "telescope", "thermal",
+  "turbine", "vaccine", "virus", "waveform", "xenon", "zygote", "aerodynamics", "algorithmic", "anatomy", "antioxidant",
+  "astrophysics", "atmosphere", "bacteria", "bauxite", "biodegradable", "bionics", "botany", "byte", "carbohydrate",
+  "cardiology", "chemical", "circuit", "classical", "cloning", "conduction", "conservation", "crustacean", "cytoplasm",
+  "datalogy", "diatomic", "dichotomy", "diffusion", "dinosaur", "dna", "ecology", "economics", "electron", "element",
+  "engineering", "entomology", "environment", "ethics", "fiber", "fungi", "fusion", "galileo", "gene", "geography",
+  "geophysics", "giant", "gravity", "hemisphere", "hormonal", "hypothesis", "immunology", "innovation", "insulin",
+  "invertebrate", "irrigation", "jurassic", "lactose", "lithosphere", "magnetic", "meteor", "microbiology", "microscope",
+  "mitosis", "mutation", "natural", "nitrate", "nutrient", "optical", "organ", "osmosis", "pathogen", "pH", "photon",
+  "phylum", "physiotherapy", "plankton", "plate", "polymer", "preservation", "propulsion", "proton", "radioactivity",
+  "reaction", "refraction", "reproduction", "resistance", "resonance", "seismology", "software", "solution", "species",
+  "subatomic", "synergy", "systematic", "taxonomy", "technology", "temperature", "transmission", "ultrasound", "universe",
+  "vertebrate", "vibration", "volcanology", "wavelength", "xylem", "yolk", "yield", "zoology", "adrenaline", "affinity",
+  "agriculture", "alloy", "alternative", "amino", "anemometer", "annual", "arithmetic", "array", "atmospheric", "barometer",
+  "biopsy", "blood", "borealis", "brain", "cancer", "capillary", "carbon", "carnivore", "catastrophe", "cell", "centrifugal",
+  "chameleon", "chemical", "chlorophyll", "chromium", "circulation", "climatology", "coagulant", "cognitive", "comet",
+  "compass", "compost", "compression", "compound", "conduction", "constellation", "contaminant", "control", "convection",
+  "convergent", "cosmic", "cranium", "crystal", "cylinder", "cytoplasmic", "decay", "decibel", "deduction", "density",
+  "deoxyribonucleic", "detritus", "diffraction", "disease", "domesticate", "doppler", "drift", "earthquake", "echinoderm",
+  "eclipse", "ecosystem", "efficiency", "electromagnetic", "electron", "electrophoresis", "elimination", "elemental",
+  "embryology", "emission", "enzyme", "epidemiology", "equator", "erosion", "exponential", "factorial", "farming",
+  "fertilization", "fertility", "filament", "fission", "fossil", "fungal", "fusion", "galvanize", "genetic", "geology",
+  "geothermal", "glacier", "granite", "gravitational", "habitat", "herbivore", "heredity", "heterogeneous", "homogeneous",
+  "hydraulic", "hydrogen", "immunoglobulin", "infectious", "influenza", "inorganic", "ion", "isotope", "kinetic",
+  "laboratory", "landslide", "lateral", "latitude", "lava", "leaf", "levitation", "limestone", "lithium", "luminescence",
+  "magnesium", "magnify", "magnitude", "mammal", "marsupial", "matter", "meiosis", "mercury", "metabolism", "metamorphosis",
+  "meteorology", "methane", "microscopic", "mineral", "mitochondria", "molecule", "momentum", "monomer", "morphology",
+  "mutation", "natural", "nebula", "neutron", "niche", "nucleic", "nucleus", "nutrient", "observatory", "organic",
+  "organism", "osmosis", "oxidation", "oxygen", "ozone", "pandemic", "parasitic", "particle", "petrify", "phenomenon",
+  "photosphere", "phylum", "planetary", "plasma", "platelet", "pollution", "positron", "potential", "precipitate",
+  "protein", "psychology", "quarantine", "quark", "radiation", "radio", "rainforest", "reactant", "reagent", "recycle",
+  "refraction", "regeneration", "respiratory", "saline", "satellite", "sediment", "seismic", "solstice", "species",
+  "spectrum", "sperm", "spinal", "spore", "sterilization", "stratosphere", "subspecies", "sunspot", "surface", "symbiosis",
+  "synthesis", "taxonomy", "telescopic", "temperature", "terrestrial", "topography", "toxicity", "transistor", "turbine",
+  "ultraviolet", "vascular", "vector", "velocity", "vibration", "virus", "volcano", "wavelength", "weather", "xenon",
+  "yield", "yolk", "zoological","algorithm", "antibody", "architecture", "asteroid", "bacterium", "biodiversity", "biosphere", 
+  "blockchain", "calculus", "catalyst", "cellulose", "chromosome", "climate", "cognition", "computation", "conifer",
   "corrosion", "cybersecurity", "data", "database", "decibel", "dendrite", "density", "deposition", "ecosystem",
   "electricity", "enzyme", "evolution", "galaxy", "genome", "geothermal", "gravity", "hemoglobin", "hormone",
   "hydrology", "inertia", "intelligence", "isotope", "kinetics", "lightyear", "molecule", "nanotechnology",
@@ -112,43 +133,81 @@ const topics = [
   "seismic", "solstice", "species", "spectrum", "sperm", "spinal", "spore", "sterilization", "stratosphere", "subspecies",
   "sunspot", "surface", "symbiosis", "synthesis", "taxonomy", "telescopic", "temperature", "terrestrial", "topography",
   "toxicity", "transistor", "turbine", "ultraviolet", "vascular", "vector", "velocity", "vibration", "virus", "volcano",
-  "wavelength", "weather", "xenon", "yield", "yolk", "zoology", "absorption", "acoustics", "adaptation", "airflow",
-  "airmass", "alveoli", "amplitude", "angstrom", "antibody", "antigen", "antiseptic", "anvil", "arc", "archaeology",
-  "artery", "ash", "asterism", "atmosphere", "atom", "bacteriophage", "bar", "baseline", "beaker", "behavior",
-  "bell", "bioinformatics", "biome", "bipolar", "bit", "biogeography", "biophysics", "botanical", "cadmium",
-  "calorie", "capillary", "capsid", "carbonyl", "carotenoid", "cartilage", "catalysis", "catheter", "cellular",
-  "cephalopod", "charge", "chloride", "chordate", "chromatography", "cloning", "cognitive", "colloid", "commensal",
-  "congenital", "conservation", "continental", "crust", "cybernetics", "dendrology", "density", "detonation",
-  "dialysis", "dielectric", "diffraction", "digital", "diode", "distill", "dopamine", "double", "ecological",
-  "ejection", "elasticity", "electrolysis", "endocrine", "energy", "epigenetics", "erosion", "ethology", "evaporation",
-  "evolution", "exponential", "exposure", "fermentation", "field", "filament", "filter", "fireball", "fission",
-  "flora", "folding", "frequency", "fusion", "genetics", "genome", "geochemistry", "glucose", "granite", "greenhouse",
-  "hematology", "hemisphere", "herbaceous", "hertz", "hydrosphere", "ionize", "ions", "iron", "isotonic", "joule",
-  "kelvin", "keystone", "latitude", "lignite", "liquid", "magma", "magnesium", "magnet", "mars", "melanin",
-  "membrane", "mendelevium", "metabolism", "metamorphic", "methane", "microscope", "mitosis", "mole", "momentum",
-  "mutation", "natural", "nerve", "neutron", "noble", "node", "nucleus", "nutrient", "oceanography", "optics",
-  "osmosis", "oxidant", "oxygen", "parasitology", "particle", "period", "phosphorus", "physiology", "pollination",
-  "polymer", "potassium", "pyramid", "pyrite", "radar", "radiocarbon", "radiology", "radiowave", "recycling",
-  "respiration", "seismology", "sequence", "silica", "sodium", "soil", "species", "spectrograph", "subduction",
-  "sulfur", "sustainable", "synthesis", "tectonics", "temperature", "thrombosis", "transpiration", "trophic",
-  "ultrasound", "vertebrate", "virus", "vortex", "wave", "weather", "wavelength", "xylem", "yield", "yolk", "zoological"
+  "wavelength", "weather", "xenon", "yield", "yolk", "zoological", "algorithm", "antibody", "architecture", "asteroid",
+  "bacterium", "biodiversity", "biosphere", "blockchain", "calculus", "catalyst", "cellulose", "chromosome", "climate",
+  "cognition", "computation", "conifer", "corrosion", "cybersecurity", "data", "database", "decibel", "dendrite", "density",
+  "deposition", "ecosystem", "electricity", "enzyme", "evolution", "galaxy", "genome", "geothermal", "gravity", "hemoglobin",
+  "hormone", "hydrology", "inertia", "intelligence", "isotope", "kinetics", "lightyear", "molecule", "nanotechnology",
+  "nucleus", "optics", "organism", "paleontology", "photosynthesis", "physics", "plasma", "protein", "quantum", "radiation",
+  "respiration", "robotics", "satellite", "simulation", "solar", "spectrum", "sustainability", "telescope", "thermal",
+  "turbine", "vaccine", "virus", "waveform", "xenon", "zygote", "aerodynamics", "algorithmic", "anatomy", "antioxidant",
+  "astrophysics", "atmosphere", "bacteria", "bauxite", "biodegradable", "bionics", "botany", "byte", "carbohydrate",
+  "cardiology", "chemical", "circuit", "classical", "cloning", "conduction", "conservation", "crustacean", "cytoplasm",
+  "datalogy", "diatomic", "dichotomy", "diffusion", "dinosaur", "dna", "ecology", "economics", "electron", "element",
+  "engineering", "entomology", "environment", "ethics", "fiber", "fungi", "fusion", "galileo", "gene", "geography",
+  "geophysics", "giant", "gravity", "hemisphere", "hormonal", "hypothesis", "immunology", "innovation", "insulin",
+  "invertebrate", "irrigation", "jurassic", "lactose", "lithosphere", "magnetic", "meteor", "microbiology", "microscope",
+  "mitosis", "mutation", "natural", "nitrate", "nutrient", "optical", "organ", "osmosis", "pathogen", "pH", "photon",
+  "phylum", "physiotherapy", "plankton", "plate", "polymer", "preservation", "propulsion", "proton", "radioactivity",
+  "reaction", "refraction", "reproduction", "resistance", "resonance", "seismology", "software", "solution", "species",
+  "subatomic", "synergy", "systematic", "taxonomy", "technology", "temperature", "transmission", "ultrasound", "universe",
+  "vertebrate", "vibration", "volcanology", "wavelength", "xylem", "yolk", "yield", "zoology", "adrenaline", "affinity",
+  "agriculture", "alloy", "alternative", "amino", "anemometer", "annual", "arithmetic", "array", "atmospheric", "barometer",
+  "biopsy", "blood", "borealis", "brain", "cancer", "capillary", "carbon", "carnivore", "catastrophe", "cell", "centrifugal",
+  "chameleon", "chemical", "chlorophyll", "chromium", "circulation", "climatology", "coagulant", "cognitive", "comet",
+  "compass", "compost", "compression", "compound", "conduction", "constellation", "contaminant", "control", "convection",
+  "convergent", "cosmic", "cranium", "crystal", "cylinder", "cytoplasmic", "decay", "decibel", "deduction", "density",
+  "deoxyribonucleic", "detritus", "diffraction", "disease", "domesticate", "doppler", "drift", "earthquake", "echinoderm",
+  "eclipse", "ecosystem", "efficiency", "electromagnetic", "electron", "electrophoresis", "elimination", "elemental",
+  "embryology", "emission", "enzyme", "epidemiology", "equator", "erosion", "exponential", "factorial", "farming",
+  "fertilization", "fertility", "filament", "fission", "fossil", "fungal", "fusion", "galvanize", "genetic", "geology",
+  "geothermal", "glacier", "granite", "gravitational", "habitat", "herbivore", "heredity", "heterogeneous", "homogeneous",
+  "hydraulic", "hydrogen", "immunoglobulin", "infectious", "influenza", "inorganic", "ion", "isotope", "kinetic",
+  "laboratory", "landslide", "lateral", "latitude", "lava", "leaf", "levitation", "limestone", "lithium", "luminescence",
+  "magnesium", "magnify", "magnitude", "mammal", "marsupial", "matter", "meiosis", "mercury", "metabolism", "metamorphosis",
+  "meteorology", "methane", "microscopic", "mineral", "mitochondria", "molecule", "momentum", "monomer", "morphology",
+  "mutation", "natural", "nebula", "neutron", "niche", "nucleic", "nucleus", "nutrient", "observatory", "organic",
+  "organism", "osmosis", "oxidation", "oxygen", "ozone", "pandemic", "parasitic", "particle", "petrify", "phenomenon",
+  "photosphere", "phylum", "planetary", "plasma", "platelet", "pollution", "positron", "potential", "precipitate",
+  "protein", "psychology", "quarantine", "quark", "radiation", "radio", "rainforest", "reactant", "reagent", "recycle",
+  "refraction", "regeneration", "respiratory", "saline", "satellite", "sediment", "seismic", "solstice", "species",
+  "spectrum", "sperm", "spinal", "spore", "sterilization", "stratosphere", "subspecies", "sunspot", "surface", "symbiosis",
+  "synthesis", "taxonomy", "telescopic", "temperature", "terrestrial", "topography", "toxicity", "transistor", "turbine",
+  "ultraviolet", "vascular", "vector", "velocity", "vibration", "virus", "volcano", "wavelength", "weather", "xenon",
+  "yield", "yolk", "zoological"
 ];
+console.log(`Total topics: ${topics.length}`);
 
 const today = new Date().getDate();
-const start = (today - 1) * 30;
-const end = Math.min(start + 30, topics.length);
-const dayTopics = topics.slice(start, end);
+const start = (today - 1) * 50;
+const end = Math.min(start + 50, topics.length);
+const desktopTopics = topics.slice(start, end-20);
+const mobileTopics = topics.slice(end-20, end);
+console.log(`Desktop topics: ${desktopTopics.length}`);
+console.log(desktopTopics);
+console.log(`Mobile topics: ${mobileTopics.length}`);
+console.log(mobileTopics);
+
 
 // Listen for messages from popup.js
 chrome.runtime.onMessage.addListener((message) => {
   switch (message.action) {
-    case "startCustomTimer":
+    case "startCustomTimer-Mobile":
+      MobileCustomAutomation(message.searchCount, message.customTimer);
+      break;
+    case "startCustomTimer-Desktop":
       startCustomAutomation(message.searchCount, message.customTimer);
       break;
-    case "startPredefinedTimer":
+    case "startPredefinedTimer-Mobile":
+      MobilePreDefinedAutomation(message.searchCount);
+      break;
+    case "startPredefinedTimer-Desktop":
       startPreDefinedAutomation(message.searchCount);
       break;
-    case "startNoTimer":
+    case "startNoTimer-Mobile":
+      MobileNoTimerAutomation(message.searchCount);
+      break;
+    case "startNoTimer-Desktop":
       startNoTimerAutomation(message.searchCount);
       break;
     case "stopAutomation":
@@ -162,24 +221,56 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
-// Start automation with a custom timer
-function startCustomAutomation(searchCount, timer) {
+// wait for the extension to initialize before executing any actions
+chrome.runtime.onStartup.addListener(() => {
+  setTimeout(() => {
+    performMobileSearch();
+  }, 5000); // Delay by 5 second
+});
+
+
+// Start Mobile automation with a predefined timer
+function MobileCustomAutomation(searchCount, timer) {
   clearInterval(searchInterval);
   searchesRemaining = searchCount;
-
   searchInterval = setInterval(() => {
     if (searchesRemaining <= 0) {
       stopAutomation();
-      console.log("Search automation with custom timer is completed successfully.");
+      console.log("Mobile search automation with custom timer is completed successfully.");
     } else {
-      performSearch();
+      performMobileSearch();
       searchesRemaining--;
       console.log(`Searches remaining: ${searchesRemaining}`);
     }
   }, timer);
 }
 
-// Start automation with a predefined timer
+// Start Desktop automation with a custom timer
+function startCustomAutomation(searchCount, timer) {
+  clearInterval(searchInterval);
+  searchesRemaining = searchCount;
+  
+  searchInterval = setInterval(() => {
+    if (searchesRemaining <= 0) {
+      stopAutomation();
+      console.log("Desktop search automation with custom timer is completed successfully.");
+    } else {
+      performDesktopSearch();
+      searchesRemaining--;
+      console.log(`Searches remaining: ${searchesRemaining}`);
+    }
+  }, timer);
+}
+
+// Start Mobile automation with a predefined timer
+function MobilePreDefinedAutomation(searchCount) {
+  clearInterval(searchInterval);
+  searchesRemaining = searchCount;
+  searchesThisCycle = 0;
+  initiateMobileSearchCycle();
+}
+
+// Start Desktop automation with a predefined timer
 function startPreDefinedAutomation(searchCount) {
   clearInterval(searchInterval);
   searchesRemaining = searchCount;
@@ -187,11 +278,39 @@ function startPreDefinedAutomation(searchCount) {
   initiateSearchCycle();
 }
 
-// Initiates a cycle of 3 searches with a 15-second interval
+// Initiates a cycle of 3 searches with a 15-second interval for Mobile
+function initiateMobileSearchCycle() {
+  if(searchesRemaining <= 0) {
+    stopAutomation();
+    console.log("Mobile search automation with predefined time is completed successfully.");
+    return;
+  }
+
+  for (let i = 0; i < maxSearchesPerCycle; i++) {
+    setTimeout(() => {
+      if (searchesRemaining > 0) {
+        performMobileSearch();
+        searchesRemaining--;
+        searchesThisCycle++;
+      }
+      console.log(`Searches remaining: ${searchesRemaining}`);
+    }, i * 15000); // 15 seconds interval
+    console.log(`Search cycle: (${searchesThisCycle}/${maxSearchesPerCycle})`);
+  }
+
+  setTimeout(() => {
+    if (searchesRemaining > 0) {
+      initiateMobileSearchCycle();
+      console.log("Search cycle completed. Starting the next cycle.");
+    }
+  }, restPeriod); // Wait for 15 minutes (900000 ms)
+}
+
+// Initiates a cycle of 3 searches with a 15-second interval for Desktop
 function initiateSearchCycle() {
   if (searchesRemaining <= 0) {
     stopAutomation();
-    console.log("Search automation with predefined time is completed successfully.");
+    console.log("Desktop search automation with predefined time is completed successfully.");
     return;
   }
 
@@ -199,7 +318,7 @@ function initiateSearchCycle() {
   for (let i = 0; i < maxSearchesPerCycle; i++) {
     setTimeout(() => {
       if (searchesRemaining > 0) {
-        performSearch();
+        performDesktopSearch();
         searchesRemaining--;
         searchesThisCycle++;
       }
@@ -217,17 +336,50 @@ function initiateSearchCycle() {
   }, restPeriod); // Wait for 15 minutes (900000 ms)
 }
 
-// Start automation with no timer (open all tabs at once)
+// Start automation with no timer (open all tabs at once) for Mobile
+function MobileNoTimerAutomation(searchCount) {
+  alert("Mobile automation with no timer is not supported.");
+  console.log("One-time search automation not possible.");
+  stopAutomation();
+}
+
+// Start automation with no timer (open all tabs at once) for Desktop
 function startNoTimerAutomation(searchCount) {
   for (let i = 0; i < searchCount; i++) {
-    performSearch();
+    performDesktopSearch();
   }
   console.log("One-time search automation completed successfully.");
 }
 
+// wait for the extension to initialize before executing any actions
+function performMobileSearch(){
+  setTimeout(() =>{
+    startMobileSearch();
+  },5000);
+}
+
+
+//perform a mobile search
+function startMobileSearch() {
+  const query = generateMobileSearchQuery();
+  const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+      const currentTabId = tabs[0].id;
+      chrome.tabs.update(currentTabId, { url }, () => {
+        chrome.runtime.sendMessage({ action: "incrementsearchCount" });
+        console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
+      });
+    } else {
+      console.error("No active tab found.");
+    }
+  });
+}
+
 // Perform a Bing search
-function performSearch() {
-  const query = generateSearchQuery();
+function performDesktopSearch() {
+  const query = generateDesktopSearchQuery();
   const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
 
   chrome.storage.sync.get("focusTabs", (data) => {
@@ -236,10 +388,17 @@ function performSearch() {
   console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
 }
 
-// Generate a search query based on the current date with 930 unique words
-function generateSearchQuery() {
-  const query = dayTopics[currentIndex];
-  currentIndex = (currentIndex + 1) % dayTopics.length;
+// Generate a search query based on the current date with 930 unique words for Desktop
+function generateDesktopSearchQuery() {
+  const query = desktopTopics[currentIndex];
+  currentIndex = (currentIndex + 1) % desktopTopics.length;
+  return query;
+}
+
+// Generate a search query based on the current date with 930 unique words for Mobile
+function generateMobileSearchQuery() {
+  const query = mobileTopics[currentIndex];
+  currentIndex = (currentIndex + 1) % mobileTopics.length;
   return query;
 }
 
@@ -248,6 +407,7 @@ function stopAutomation() {
   clearInterval(searchInterval);
   searchesRemaining = 0;
   searchesThisCycle = 0;
+  currentIndex = 0;
   console.log("All running tasks are stopped successfully.");
 }
 

@@ -1,24 +1,32 @@
 {
-    "manifest_version": 3,
-    "name": "BING BOUNTY",
-    "version": "0.1.1",
-    "description": "Automate Bing searches to earn Edge points with daily and rate limits.",
-    "permissions": ["storage", "alarms", "activeTab", "scripting", "tabs"],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon": {
-        "128": "images/icon.png",
-        "48": "images/icon.png",
-        "16": "images/icon.png"
-      }
-    },
-    "icons": {
+  "manifest_version": 3,
+  "name": "BING BOUNTY",
+  "version": "0.2.1",
+  "description": "Automate Bing searches to earn Edge points with daily and rate limits.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*.bing.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
       "128": "images/icon.png",
       "48": "images/icon.png",
       "16": "images/icon.png"
     }
+  },
+  "icons": {
+    "128": "images/icon.png",
+    "48": "images/icon.png",
+    "16": "images/icon.png"
   }
-  
+}

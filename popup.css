@@ -42,12 +42,7 @@ body {
   color: #0078d4;
 }
 
-.actions-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.actions-body-first {
+.container-top {
   display: flex;
 }
 
@@ -57,19 +52,29 @@ body {
   align-items: center;
   width: 180px;
 }
+
+.actions-middle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 140px;
+  margin-left: 20px;
+}
 .actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.actions-top label {
+.actions-top label,
+.actions-middle label,
+.actions p {
   font-size: 16px;
   font-weight: bold;
 }
 
 .input-dropdown select,
-.input-number input,
+.input-dropdown input,
 .switch {
   padding: 5px;
   border: 2px solid #0078d4;
@@ -79,17 +84,18 @@ body {
 }
 
 input[type="number"] {
-  width: 80px;
+  width: 100%;
+  display: none;
 }
 
-.actions p {
-  font-size: 16px;
-  font-weight: bold;
+.actions-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #save-btn {
   position: relative;
-  left: 35%;
   background-color: #4caf50;
   color: white;
   border: none;
