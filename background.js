@@ -1,9 +1,10 @@
-let searchInterval;
+const restPeriod = 900000; // 15 minutes
+const maxSearchesPerCycle = 3;
+let searchCount = 0;
+let searchLimit = 0;
 let searchesRemaining = 0;
 let currentIndex = 0;
-let searchesThisCycle = 0;
-const maxSearchesPerCycle = 3;
-const restPeriod = 900000; // 15 minutes in milliseconds (900,000)
+let searchInterval;
 
 const topics = [
   "algorithm", "antibody", "architecture", "asteroid", "bacterium", "biodiversity", "biosphere", "blockchain",
@@ -176,252 +177,106 @@ const topics = [
   "ultraviolet", "vascular", "vector", "velocity", "vibration", "virus", "volcano", "wavelength", "weather", "xenon",
   "yield", "yolk", "zoological"
 ];
-console.log(`Total topics: ${topics.length}`);
 
-const today = new Date().getDate();
-const start = (today - 1) * 50;
-const end = Math.min(start + 50, topics.length);
-const desktopTopics = topics.slice(start, end-20);
-const mobileTopics = topics.slice(end-20, end);
-console.log(`Desktop topics: ${desktopTopics.length}`);
-console.log(desktopTopics);
-console.log(`Mobile topics: ${mobileTopics.length}`);
-console.log(mobileTopics);
+const today = new Date().toDateString();
+const start = Math.max((new Date().getDate() - 1) * 30, 0);
+const end = Math.min(start + 30, topics.length);
+const desktopTopics = topics.slice(start, end);
 
-
-// Listen for messages from popup.js
+// Chrome message listener
 chrome.runtime.onMessage.addListener((message) => {
-  switch (message.action) {
-    case "startCustomTimer-Mobile":
-      MobileCustomAutomation(message.searchCount, message.customTimer);
-      break;
-    case "startCustomTimer-Desktop":
-      startCustomAutomation(message.searchCount, message.customTimer);
-      break;
-    case "startPredefinedTimer-Mobile":
-      MobilePreDefinedAutomation(message.searchCount);
-      break;
-    case "startPredefinedTimer-Desktop":
-      startPreDefinedAutomation(message.searchCount);
-      break;
-    case "startNoTimer-Mobile":
-      MobileNoTimerAutomation(message.searchCount);
-      break;
-    case "startNoTimer-Desktop":
-      startNoTimerAutomation(message.searchCount);
-      break;
-    case "stopAutomation":
-      stopAutomation();
-      break;
-    case "closeTabs":
-      closeAutomation();
-      break;
-    default:
-      console.log("Unknown action:", message.action);
-  }
-});
-
-// wait for the extension to initialize before executing any actions
-chrome.runtime.onStartup.addListener(() => {
-  setTimeout(() => {
-    performMobileSearch();
-  }, 5000); // Delay by 5 second
-});
-
-
-// Start Mobile automation with a predefined timer
-function MobileCustomAutomation(searchCount, timer) {
-  clearInterval(searchInterval);
-  searchesRemaining = searchCount;
-  searchInterval = setInterval(() => {
-    if (searchesRemaining <= 0) {
-      stopAutomation();
-      console.log("Mobile search automation with custom timer is completed successfully.");
-    } else {
-      performMobileSearch();
-      searchesRemaining--;
-      console.log(`Searches remaining: ${searchesRemaining}`);
+    switch (message.action) {
+        case "startCustomTimer-Desktop":
+            startCustomAutomation(message.searchCount, message.customTimer);
+            break;
+        case "startPredefinedTimer-Desktop":
+            startPreDefinedAutomation(message.searchCount);
+            break;
+        case "startNoTimer-Desktop":
+            startNoTimerAutomation(message.searchCount);
+            break;
+        case "stopAutomation":
+            stopAutomation();
+            break;
+        case "closeTabs":
+            closeAutomation();
+            break;
     }
-  }, timer);
-}
+});
 
-// Start Desktop automation with a custom timer
 function startCustomAutomation(searchCount, timer) {
-  clearInterval(searchInterval);
-  searchesRemaining = searchCount;
-  
-  searchInterval = setInterval(() => {
-    if (searchesRemaining <= 0) {
-      stopAutomation();
-      console.log("Desktop search automation with custom timer is completed successfully.");
-    } else {
-      performDesktopSearch();
-      searchesRemaining--;
-      console.log(`Searches remaining: ${searchesRemaining}`);
-    }
-  }, timer);
-}
-
-// Start Mobile automation with a predefined timer
-function MobilePreDefinedAutomation(searchCount) {
-  clearInterval(searchInterval);
-  searchesRemaining = searchCount;
-  searchesThisCycle = 0;
-  initiateMobileSearchCycle();
-}
-
-// Start Desktop automation with a predefined timer
-function startPreDefinedAutomation(searchCount) {
-  clearInterval(searchInterval);
-  searchesRemaining = searchCount;
-  searchesThisCycle = 0;
-  initiateSearchCycle();
-}
-
-// Initiates a cycle of 3 searches with a 15-second interval for Mobile
-function initiateMobileSearchCycle() {
-  if(searchesRemaining <= 0) {
-    stopAutomation();
-    console.log("Mobile search automation with predefined time is completed successfully.");
-    return;
-  }
-
-  for (let i = 0; i < maxSearchesPerCycle; i++) {
-    setTimeout(() => {
-      if (searchesRemaining > 0) {
-        performMobileSearch();
-        searchesRemaining--;
-        searchesThisCycle++;
-      }
-      console.log(`Searches remaining: ${searchesRemaining}`);
-    }, i * 15000); // 15 seconds interval
-    console.log(`Search cycle: (${searchesThisCycle}/${maxSearchesPerCycle})`);
-  }
-
-  setTimeout(() => {
-    if (searchesRemaining > 0) {
-      initiateMobileSearchCycle();
-      console.log("Search cycle completed. Starting the next cycle.");
-    }
-  }, restPeriod); // Wait for 15 minutes (900000 ms)
-}
-
-// Initiates a cycle of 3 searches with a 15-second interval for Desktop
-function initiateSearchCycle() {
-  if (searchesRemaining <= 0) {
-    stopAutomation();
-    console.log("Desktop search automation with predefined time is completed successfully.");
-    return;
-  }
-
-  // Perform 3 searches with 15 seconds interval (15 seconds per search)
-  for (let i = 0; i < maxSearchesPerCycle; i++) {
-    setTimeout(() => {
-      if (searchesRemaining > 0) {
-        performDesktopSearch();
-        searchesRemaining--;
-        searchesThisCycle++;
-      }
-      console.log(`Searches remaining: ${searchesRemaining}`);
-    }, i * 15000); // 15 seconds interval
-    console.log(`Search cycle: (${searchesThisCycle}/${maxSearchesPerCycle})`);
-  }
-
-  // After completing 3 searches, wait for 15 minutes before starting the next cycle
-  setTimeout(() => {
-    if (searchesRemaining > 0) {
-      initiateSearchCycle();
-      console.log("Search cycle completed. Starting the next cycle.");
-    }
-  }, restPeriod); // Wait for 15 minutes (900000 ms)
-}
-
-// Start automation with no timer (open all tabs at once) for Mobile
-function MobileNoTimerAutomation(searchCount) {
-  alert("Mobile automation with no timer is not supported.");
-  console.log("One-time search automation not possible.");
-  stopAutomation();
-}
-
-// Start automation with no timer (open all tabs at once) for Desktop
-function startNoTimerAutomation(searchCount) {
-  for (let i = 0; i < searchCount; i++) {
-    performDesktopSearch();
-  }
-  console.log("One-time search automation completed successfully.");
-}
-
-// wait for the extension to initialize before executing any actions
-function performMobileSearch(){
-  setTimeout(() =>{
-    startMobileSearch();
-  },5000);
-}
-
-
-//perform a mobile search
-function startMobileSearch() {
-  const query = generateMobileSearchQuery();
-  const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
-
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-      const currentTabId = tabs[0].id;
-      chrome.tabs.update(currentTabId, { url }, () => {
-        chrome.runtime.sendMessage({ action: "incrementsearchCount" });
-        console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
-      });
-    } else {
-      console.error("No active tab found.");
-    }
-  });
-}
-
-// Perform a Bing search
-function performDesktopSearch() {
-  const query = generateDesktopSearchQuery();
-  const url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
-
-  chrome.storage.sync.get("focusTabs", (data) => {
-    chrome.tabs.create({ url, active: data.focusTabs || false });
-  });
-  console.log(`Search performed for: ${query} at ${new Date().toLocaleTimeString()}`);
-}
-
-// Generate a search query based on the current date with 930 unique words for Desktop
-function generateDesktopSearchQuery() {
-  const query = desktopTopics[currentIndex];
-  currentIndex = (currentIndex + 1) % desktopTopics.length;
-  return query;
-}
-
-// Generate a search query based on the current date with 930 unique words for Mobile
-function generateMobileSearchQuery() {
-  const query = mobileTopics[currentIndex];
-  currentIndex = (currentIndex + 1) % mobileTopics.length;
-  return query;
-}
-
-// Stop all automation tasks
-function stopAutomation() {
-  clearInterval(searchInterval);
-  searchesRemaining = 0;
-  searchesThisCycle = 0;
-  currentIndex = 0;
-  console.log("All running tasks are stopped successfully.");
-}
-
-// Close all other opened tabs
-function closeAutomation() {
-  chrome.tabs.query({}, (tabs) => {
-    const currentTab = tabs.find((tab) => tab.active);
-    if (currentTab) {
-      tabs.forEach((tab) => {
-        if (tab.id !== currentTab.id) {
-          chrome.tabs.remove(tab.id);
+    clearInterval(searchInterval);
+    searchesRemaining = searchCount;
+    searchInterval = setInterval(() => {
+        if (searchesRemaining <= 0) {
+            stopAutomation();
+        } else {
+            performDesktopSearch();
+            searchesRemaining--;
         }
-      });
-      console.log("All other tabs are closed successfully.");
+    }, timer);
+}
+
+async function startPreDefinedAutomation(searchCount) {
+    searchesRemaining = searchCount;
+    await initiateSearchCycle();
+}
+
+async function initiateSearchCycle() {
+    while (searchesRemaining > 0) {
+        for (let i = 0; i < Math.min(maxSearchesPerCycle, searchesRemaining); i++) {
+            performDesktopSearch();
+            searchesRemaining--;
+            await new Promise(resolve => setTimeout(resolve, 15000)); // 15s
+        }
+        await new Promise(resolve => setTimeout(resolve, restPeriod)); // 15m
     }
-  });
+}
+
+function startNoTimerAutomation(searchCount) {
+    for (let i = 0; i < searchCount; i++) {
+        performDesktopSearch();
+    }
+}
+
+function performDesktopSearch() {
+    const query = generateDesktopSearchQuery();
+    chrome.storage.sync.get("focusTabs", (data) => {
+        const focusTabs = data.focusTabs || false;
+        chrome.tabs.create({ active: focusTabs }, (newTab) => {
+            if (!newTab) return;
+            chrome.tabs.update(newTab.id, { url: `https://www.bing.com/search?q=${query}` });
+        });
+    });
+    incrementSearchCount();
+}
+
+function incrementSearchCount() {
+    searchCount++;
+    chrome.storage.sync.set({ searchCount });
+}
+
+function generateDesktopSearchQuery() {
+    const query = desktopTopics[currentIndex];
+    currentIndex = (currentIndex + 1) % desktopTopics.length;
+    return query;
+}
+
+function stopAutomation() {
+    clearInterval(searchInterval);
+    searchesRemaining = 0;
+    currentIndex = 0;
+}
+
+function closeAutomation() {
+    chrome.tabs.query({}, (tabs) => {
+        const currentTab = tabs.find((tab) => tab.active);
+        if (currentTab) {
+            tabs.forEach((tab) => {
+                if (tab.id !== currentTab.id) {
+                    chrome.tabs.remove(tab.id);
+                }
+            });
+        }
+    });
 }

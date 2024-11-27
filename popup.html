@@ -42,7 +42,11 @@
           <div class="input-dropdown">
             <label for="customTimerInput">Timer (sec):</label>
             <br /><br />
-            <select id="timerDropdown" name="customTimerInput" title="Select Timer">
+            <select
+              id="timerDropdown"
+              name="customTimerInput"
+              title="Select Timer"
+            >
               <option value="3">3 seconds</option>
               <option value="5">5 seconds</option>
               <option value="8">8 seconds</option>
@@ -50,6 +54,7 @@
               <option value="12">12 seconds</option>
               <option value="15">15 seconds</option>
               <option value="18">18 seconds</option>
+              <option value="20">20 seconds</option>
               <option value="custom">Custom</option>
             </select>
             <input
@@ -63,9 +68,34 @@
           </div>
         </div>
       </div>
-      <!-- Save Button -->
-      <div class="actions">
+      <div id="limitInfo"></div>
+
+      <!-- <div class="container-top">
+        <div class="actions-middle">
+          <div class="checkbox-wrapper-2">
+            <label for="mobileSearch">Mobile Search:</label>
+            <input id="mobileSearch" type="checkbox" class="custom_check" />
+          </div>
+        </div>
+      </div> -->
+      <div class="actions-middle">
         <button id="save-btn">Save Content</button>
+      </div>
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-info">
+          <div class="searched">
+            <span id="count">0</span>
+            <p>Search Done</p>
+          </div>
+          <div class="remaining">
+            <span id="remainingCount">3</span>
+            <p>Search Remaining</p>
+          </div>
+        </div>
       </div>
 
       <!-- Automation Controls -->

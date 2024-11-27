@@ -55,10 +55,9 @@ body {
 
 .actions-middle {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 140px;
-  margin-left: 20px;
+  margin-left: 100px;
 }
 .actions {
   display: flex;
