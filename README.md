@@ -36,11 +36,13 @@
    git clone https://github.com/karthickssp/BingBounty.git
    cd BingBounty
    ```
+
 2. **Load the Extension in Microsoft Edge**
 
    - Open Microsoft Edge and navigate to `edge://extensions/`.
    - Enable **Developer mode** in the bottom left corner.
    - Click **Load unpacked** and select the `BingBounty` folder.
+
 3. **Setup**
    The extension is now installed and ready to be configured from the popup UI.
 
@@ -54,10 +56,12 @@
      - **Custom Timer**: Specify the number of searches and the timer in seconds.
      - **Pre-Defined Timer**: Runs with a fixed limit of 3 searches every 15 minutes.
      - **No Timer**: Opens tabs and performs searches all at once.
+
 2. **Stop/Close Automation**
 
    - Use the **Stop Automation** button to stop the searches.
    - Use the **Close Automation** button to close all automated tabs.
+
 3. **Monitor Search Progress**
 
    - The console in Developer Tools (`Ctrl + Shift + I`) will display real-time progress for ongoing searches.

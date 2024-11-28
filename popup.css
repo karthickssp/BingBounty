@@ -107,7 +107,11 @@ input[type="number"] {
 #save-btn:hover {
   background-color: #45a049;
 }
-
+#limitInfo{
+  color: red;
+  font-size: 14 px;
+  text-align: center;
+}
 .progress-container {
   display: flex;
   flex-direction: column;

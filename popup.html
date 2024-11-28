@@ -21,7 +21,6 @@
             <input id="focusTabs" type="checkbox" class="custom_check" />
           </div>
         </div>
-
         <!-- Dropdown for Search Count -->
         <div class="actions-top">
           <div class="input-dropdown">
@@ -36,7 +35,6 @@
             </select>
           </div>
         </div>
-
         <!-- Timer Input Field -->
         <div class="actions-top">
           <div class="input-dropdown">
@@ -47,6 +45,7 @@
               name="customTimerInput"
               title="Select Timer"
             >
+              <option value="0" selected>0 seconds</option>
               <option value="3">3 seconds</option>
               <option value="5">5 seconds</option>
               <option value="8">8 seconds</option>
@@ -70,7 +69,7 @@
       </div>
       <div id="limitInfo"></div>
       <!-- Save Button -->
-      <div class="actions">
+      <div class="actions-middle">
         <button id="save-btn">Save Content</button>
       </div>
       <!-- Progress Bar -->
@@ -89,24 +88,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Progress Bar -->
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-bar-fill"></div>
-        </div>
-        <div class="progress-info">
-          <div class="searched">
-            <span id="count">0</span>
-            <p>Search Done</p>
-          </div>
-          <div class="remaining">
-            <span id="remainingCount">3</span>
-            <p>Search Remaining</p>
-          </div>
-        </div>
-      </div>
-
       <!-- Automation Controls -->
       <div class="actions-body">
         <div class="actions">
@@ -125,7 +106,6 @@
           <p>Stop all tasks:</p>
           <button id="stop-btn">Stop Automation</button>
         </div>
-
         <div class="actions">
           <p>Close all tabs:</p>
           <button id="close-btn">Close Automation</button>
@@ -141,9 +121,6 @@
               target="_blank"
               rel="noopener"
               >Karthick SSP</a
-            >.</p>
-          <a href="https://github.com/karthickssp" target="_blank" class="footer-link" rel="noopener">
-              >Karthick</a
             >.
           </p>
           <a
