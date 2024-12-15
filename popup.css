@@ -54,8 +54,9 @@ body {
 .actions-middle {
   display: flex;
   align-items: center;
-  width: 140px;
-  margin-left: 100px;
+  justify-content: space-between;
+  width: 280px;
+  margin-left: 25px;
 }
 .actions {
   display: flex;
@@ -92,7 +93,6 @@ input[type="number"] {
 }
 
 #save-btn {
-  position: relative;
   background-color: #4caf50;
   color: white;
   border: none;
@@ -105,9 +105,25 @@ input[type="number"] {
 }
 
 #save-btn:hover {
-  background-color: #45a049;
+  background-color: #208625;
 }
-#limitInfo{
+
+#reset-btn {
+  background-color: #f53939;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#reset-btn:hover {
+  background-color: #c0392b;
+}
+#limitInfo {
   color: red;
   font-size: 14 px;
   text-align: center;
@@ -203,18 +219,19 @@ input[type="number"] {
   background-color: #e67e22;
 }
 
-#stop-btn {
+#task-btn {
   background-color: #fc0505;
   color: white;
   border: none;
-  padding: 8px 12px;
+  width: 130px;
+  height: 32px;
   border-radius: 4px;
-  font-weight: bold;
+  font-weight: 550;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-#stop-btn:hover {
+#task-btn:hover {
   background-color: #c0392b;
 }
 

@@ -1,15 +1,19 @@
 let searchLimit = 0;
 let searchCount = 0;
+let isPaused = false;
+let activeAutomation = null;
 const today = new Date().getDate();
 const focusTabsCheckbox = document.getElementById("focusTabs");
 const searchCountDropdown = document.getElementById("searchCount");
 const customTimerInput = document.getElementById("customTimerInput");
 const timerDropdown = document.getElementById("timerDropdown");
 const saveButton = document.getElementById("save-btn");
+const restButton = document.getElementById("reset-btn");
 const startBtnCustomTimer = document.getElementById("start-btn-1");
 const startBtnPredefinedTimer = document.getElementById("start-btn-2");
 const startBtnNoTimer = document.getElementById("start-btn-3");
-const stopBtn = document.getElementById("stop-btn");
+const taskBtn = document.getElementById("task-btn");
+const taskStatus = document.getElementById("task-status");
 const closeBtn = document.getElementById("close-btn");
 const progressBarFill = document.querySelector(".progress-bar-fill");
 const limitInfo = document.getElementById("limitInfo");
@@ -31,15 +35,18 @@ function getTimerValue() {
   return parseInt(timerDropdown.value, 10) * 1000;
 }
 function updateUI(searchCount, searchLimit) {
-  chrome.storage.sync.set({lastSearchCount: searchCount});
+  chrome.storage.sync.set({ lastSearchCount: searchCount });
   const remainingCount = Math.max(searchLimit - searchCount, 0);
   document.getElementById("count").textContent = searchCount;
   document.getElementById("remainingCount").textContent = remainingCount;
   if (progressBarFill) {
-    const progressPercent = searchLimit > 0 ? (searchCount / searchLimit) * 100 : 0;
+    const progressPercent =
+      searchLimit > 0 ? (searchCount / searchLimit) * 100 : 0;
     progressBarFill.style.width = Math.min(progressPercent, 100) + "%";
   }
-  console.log(`Updated UI: SearchCount = ${searchCount}, RemainingCount = ${remainingCount}`);
+  console.log(
+    `Updated UI: SearchCount = ${searchCount}, RemainingCount = ${remainingCount}`
+  );
 }
 chrome.storage.sync.get(
   {
@@ -61,7 +68,7 @@ chrome.storage.sync.get(
     timerDropdown.value = data.customTimer > 0 ? data.customTimer / 1000 : 0;
     customTimerInput.value = data.customTimer / 1000 || "";
     searchLimit = parseInt(data.searchCount, 10) || 0;
-    console.log("Search count: ", searchCount);
+    console.log("Searched Query count: ", searchCount);
     console.log("Search limit: ", searchLimit);
     console.log("Focus tabs: ", data.focusTabs);
     console.log("Custom timer: ", data.customTimer);
@@ -92,12 +99,30 @@ saveButton.addEventListener("click", () => {
     },
     () => {
       updateUI(0, newSearchLimit);
+      console.log("Searched Query count: ", searchCount);
       console.log("Search limit: ", newSearchLimit);
-      console.log("Search count: ", searchCount);
-      console.log("Focus tabs: ", focusTabs.checked);
       console.log("Custom timer: ", customTimer);
       console.log("Last date: ", today);
-      alert("Settings Saved!!!");
+      console.log("Focus tabs: ", focusTabs.checked);
+      alert("Settings Saved!!! Please refresh the page.");
+    }
+  );
+});
+// Reset all automation tasks
+restButton.addEventListener("click", () => {
+  console.log("Stop/ Reset is triggered.");
+  chrome.runtime.sendMessage({ action: "stopResetAutomation" });
+  chrome.storage.sync.set(
+    {
+      focusTabs: false,
+      searchCount: 0,
+      customTimer: 0,
+      lastDate: today,
+      lastSearchCount: 0,
+    },
+    () => {
+      updateUI(0, 0);
+      alert("Reset Successfully!!! Please refresh the page.");
     }
   );
 });
@@ -114,8 +139,9 @@ startBtnCustomTimer.addEventListener("click", () => {
     alert("Please enter a valid timer and search count.");
     return;
   }
-  searchCount = 0;  // search count starts from beginning
+  searchCount = 0; // search count starts from beginning
   searchLimit = newSearchLimit;
+  activeAutomation = "customTimer";
   updateUI(searchCount, searchLimit);
   console.log("Custom-timer automation is triggered.");
   chrome.runtime.sendMessage({
@@ -131,8 +157,9 @@ startBtnPredefinedTimer.addEventListener("click", () => {
     alert("Please enter a valid search count.");
     return;
   }
-  searchCount = 0;  // search count starts from beginning
+  searchCount = 0; // search count starts from beginning
   searchLimit = newSearchLimit;
+  activeAutomation = "predefinedTimer";
   updateUI(searchCount, searchLimit);
   console.log("Predefined-timer automation is triggered.");
   chrome.runtime.sendMessage({
@@ -147,8 +174,9 @@ startBtnNoTimer.addEventListener("click", () => {
     alert("Please enter a valid search count.");
     return;
   }
-  searchCount = 0;  // search count starts from beginning
+  searchCount = 0; // search count starts from beginning
   searchLimit = newSearchLimit;
+  activeAutomation = "noTimer";
   updateUI(searchCount, searchLimit);
   console.log("No-timer automation is triggered.");
   chrome.runtime.sendMessage({
@@ -156,12 +184,26 @@ startBtnNoTimer.addEventListener("click", () => {
     searchCount: searchLimit,
   });
 });
-// Stop all automation tasks
-stopBtn.addEventListener("click", () => {
-  console.log("Stop Automation is triggered.");
-  chrome.runtime.sendMessage({ action: "stopAutomation" });
-  searchCount = 0;
-  updateUI(searchCount, searchLimit);
+// Pause and resume the automation task
+taskBtn.addEventListener("click", () => {
+  isPaused = !isPaused;
+  if (isPaused) {
+    taskBtn.textContent = "Resume Automation";
+    taskStatus.textContent = "Resume the task:";
+    console.log("Pause is triggered.");
+    chrome.runtime.sendMessage({
+      action: "pauseAutomation",
+      type: activeAutomation,
+    });
+  } else {
+    taskBtn.textContent = "Pause Automation";
+    taskStatus.textContent = "Pause the task:";
+    console.log("Resume is triggered.");
+    chrome.runtime.sendMessage({
+      action: "resumeAutomation",
+      type: activeAutomation,
+    });
+  }
 });
 // Close all other opened tabs
 closeBtn.addEventListener("click", () => {
@@ -171,12 +213,23 @@ closeBtn.addEventListener("click", () => {
 // Listener for background messages to update progress
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action == "incrementsearchCount") {
-    chrome.storage.sync.get("lastSearchCount", (data) => {
-      searchCount = data.lastSearchCount || 0;
-      chrome.storage.sync.set({ lastSearchCount: searchCount + 1 }, () => {
-        updateUI(searchCount+1, searchLimit);
-        console.log(`Search count updated to ${searchCount + 1}`);
-      });
-    });
+    chrome.storage.sync.get(
+      {
+        searchCount: 0,
+        lastSearchCount: 0,
+      },
+      (data) => {
+        searchCount = data.lastSearchCount || 0;
+        searchLimit = data.searchCount || 0;
+        chrome.storage.sync.set({ lastSearchCount: searchCount + 1 }, () => {
+          updateUI(searchCount + 1, searchLimit);
+          console.log(
+            `Search count updated to ${
+              searchCount + 1
+            } of total limit ${searchLimit}`
+          );
+        });
+      }
+    );
   }
 });
