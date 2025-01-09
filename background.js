@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener((message) => {
       automationState.isPaused = false;
       console.log(`Resumed ${message.type} automation.`);
       break;
-    case "stopAutomation":
+    case "stopAutomation": 
       automationState.isPaused = false;
       stopAutomation();
       break;
@@ -64,7 +64,7 @@ function getRandomTimer(min, max) {
 function startCustomAutomation(searchCount, timerRange) {
   stopAutomation();
   const minTimer = Math.abs(timerRange - 500);
-  const maxTimer = Math.abs(timerRange + 3528);
+  const maxTimer = Math.abs(timerRange + 4128);
   automationState.searchesRemaining = searchCount;
 
   function performCustomSearch() {

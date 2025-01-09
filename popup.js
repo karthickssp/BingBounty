@@ -194,10 +194,14 @@ restButton.addEventListener("click", () => {
 
 // Start/Pause/Resume automation task
 startProcess.addEventListener("click", () => {
+  const searchDevice = searchDeviceDropdown.value;
   const newSearchLimit = parseInt(searchCountDropdown.value, 10);
   const customTimer = getTimerValue();
   const builtinTimer = builtinTimerCheckbox.checked;
-
+  if (searchDevice === "null" || !searchDevice) {
+    alert("Please select the device.");
+    return;
+  }
   if (!isAutomationRunning) {
     if (builtinTimer) {
       if (isNaN(newSearchLimit) || newSearchLimit <= 0) {
