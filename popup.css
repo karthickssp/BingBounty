@@ -20,7 +20,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .header {
@@ -47,33 +47,26 @@ body {
   font-size: 16px;
 }
 
-.container-top {
+.container-top-1,
+.container-top-2 {
   display: flex;
+  justify-content: space-around;
 }
 
 .actions-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 120px;
+  width: 103px;
 }
 
 .actions-middle {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 280px;
-  margin-left: 25px;
+  justify-content: space-around;
 }
 .actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
 }
 
-.actions-top label,
-.actions-middle label,
-.actions p {
+label {
   font-size: 16px;
   font-weight: bold;
 }
@@ -93,12 +86,6 @@ input[type="number"] {
   display: none;
 }
 
-.actions-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 #save-btn {
   background-color: #4caf50;
   color: white;
@@ -116,7 +103,7 @@ input[type="number"] {
 }
 
 #reset-btn {
-  background-color: #f53939;
+  background-color: #9b59b6;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -128,7 +115,7 @@ input[type="number"] {
 }
 
 #reset-btn:hover {
-  background-color: #c0392b;
+  background-color: #8e44ad;
 }
 #limitInfo {
   color: red;
@@ -166,8 +153,8 @@ input[type="number"] {
 }
 
 .progress-bar {
-  width: 80%;
-  height: 15px;
+  width: 90%;
+  height: 16px;
   background-color: #fc0505;
   border-radius: 10px;
   margin: 0 auto 10px;
@@ -181,80 +168,44 @@ input[type="number"] {
   transition: width 0.5s ease;
 }
 
-#start-btn-1 {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#start-btn-1:hover {
-  background-color: #2980b9;
-}
-
-#start-btn-2 {
-  background-color: #9b59b6;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#start-btn-2:hover {
-  background-color: #8e44ad;
-}
-
-#start-btn-3 {
-  background-color: #f39c12;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#start-btn-3:hover {
-  background-color: #e67e22;
+.actions-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #task-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  width: 280px;
+  height: 34px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#task-btn:hover {
+  background-color: #006ce0;
+}
+
+#stop-btn {
   background-color: #fc0505;
   color: white;
   border: none;
-  width: 130px;
-  height: 32px;
+  width: 280px;
+  height: 34px;
+  width: 280px;
+  height: 34px;
   border-radius: 4px;
   font-weight: 550;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-#task-btn:hover {
+#stop-btn:hover {
   background-color: #c0392b;
-}
-
-#close-btn {
-  background-color: #34495e;
-  color: white;
-  border: none;
-  padding: 8px 10px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#close-btn:hover {
-  background-color: #006ce0;
 }
 
 .footer {
@@ -304,7 +255,7 @@ input[type="number"] {
   height: 26px;
   width: 45px;
   margin: 0;
-  margin-left: 22px;
+  margin-left: 20px;
   position: relative;
 }
 

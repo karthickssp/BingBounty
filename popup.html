@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="popup.css" />
-    <title>BINGBOUNTY</title>
+    <title>BING BOUNTY</title>
   </head>
   <body>
     <div class="container-body">
@@ -13,20 +13,22 @@
         <h1>Bing Bounty</h1>
       </div>
       <span id="header-span"></span>
-      <div class="container-top">
-        <!-- Checkbox for Focus Tabs -->
-        <div class="actions-top">
-          <div class="checkbox-wrapper-2">
-            <label for="focusTabs">Focus Tabs:</label>
-            <br /><br />
-            <input id="focusTabs" type="checkbox" class="custom_check" />
+      <div class="container-top-1">
+        <!-- Dropdown for Search Device -->
+         <div class="actions-top">
+          <div class="input-dropdown">
+            <label for="searchDevice">Device:</label>
+            <select id="searchDevice" name="searchDevice">
+              <option value="null">Select</option>
+              <option value="Desktop">Desktop</option>
+              <option value="Mobile">Mobile</option>
+            </select>
           </div>
-        </div>
+         </div>
         <!-- Dropdown for Search Count -->
         <div class="actions-top">
           <div class="input-dropdown">
             <label for="searchCount">Searches:</label>
-            <br /><br />
             <select id="searchCount" name="searchCount">
               <option value="0" selected>00 words</option>
               <option value="3">03 words</option>
@@ -40,7 +42,6 @@
         <div class="actions-top">
           <div class="input-dropdown">
             <label for="customTimerInput">Timer (sec):</label>
-            <br /><br />
             <select
               id="timerDropdown"
               name="customTimerInput"
@@ -68,11 +69,27 @@
           </div>
         </div>
       </div>
+      <div class="container-top-2">
+        <!-- Checkbox for Focus Tabs -->
+        <div class="actions-top">
+          <div class="checkbox-wrapper-2">
+            <label for="focusTabs">Focus Tabs:</label>
+            <input id="focusTabs" type="checkbox" class="custom_check" />
+          </div>
+        </div>
+        <!-- Checkbox for Pre Defined Trimmer -->
+        <div class="actions-top">
+          <div class="checkbox-wrapper-2">
+            <label for="builtinTimer">Builtin Timer:</label>
+            <input id="builtinTimer" type="checkbox" class="custom_check" />
+          </div>
+        </div>
+      </div>
       <div id="limitInfo"></div>
       <!-- Save Button -->
       <div class="actions-middle">
-        <button id="save-btn">Save Content</button>
-        <button id="reset-btn">Stop/ Reset</button>
+        <button id="save-btn">Save All</button>
+        <button id="reset-btn">Reset All</button>
       </div>
       <!-- Progress Bar -->
       <div class="progress-container">
@@ -93,26 +110,11 @@
       <!-- Automation Controls -->
       <div class="actions-body">
         <div class="actions">
-          <p>Custom timer:</p>
-          <button id="start-btn-1">Start Automation</button>
+          <button id="task-btn">Start Automation</button>
         </div>
         <div class="actions">
-          <p>Pre-Defined timer:</p>
-          <button id="start-btn-2">Start Automation</button>
+          <button id="stop-btn">Stop Automation</button>
         </div>
-        <div class="actions">
-          <p>No timer:</p>
-          <button id="start-btn-3">Start Automation</button>
-        </div>
-        <div class="actions">
-          <p id="task-status">Pause the task:</p>
-          <button id="task-btn">Pause Automation</button>
-        </div>
-        <div class="actions">
-          <p>Close all tabs:</p>
-          <button id="close-btn">Close Automation</button>
-        </div>
-      </div>
       <footer>
         <div class="footer">
           <p class="footer-text">

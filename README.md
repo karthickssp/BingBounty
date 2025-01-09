@@ -4,13 +4,14 @@
   <img src="images/icon.png" alt="Logo">
 </div>
 
-**BingBounty** is a Microsoft Edge extension designed to automate Bing searches, helping users maximize their rewards effortlessly within daily and periodic limits. Set it up, sit back, and watch your points increase automatically!
+**BingBounty** is a browser extension designed to automate Bing searches and help users earn Microsoft Edge points efficiently. The extension supports customizable search timers and predefined automation workflows, providing flexibility and ease of use.
 
 ---
 
 ## Table of Contents
 
 - [Features](#features)
+- [Versions](#versions)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
@@ -24,6 +25,41 @@
 - **Unique Daily Searches**: Uses a unique search term each day to ensure compliance with Bing’s terms.
 - **User-friendly Interface**: Easily start and stop automation with a simple, intuitive popup interface.
 - **Secure & Private**: No data is collected from the user; BingBounty only interacts with the Bing search engine to perform searches.
+- Automates up to **30 searches per day** with customizable timers.
+- Supports both **mobile and desktop** search topics with seamless device switching.
+- **Includes safety features such as **pause/resume, stop, and cycle limits**.
+
+---
+
+
+## Versions
+
+### **Version 1: Basic Automation**
+- **Features**:
+  - Automates up to 30 searches daily.
+  - Allows users to choose between custom timers and predefined timers.
+  - Ensures no more than 3 searches are performed every 15 minutes.
+  - Randomized search delays between **15–30 seconds** for predefined timers.
+- **Limitations**:
+  - Single-tab search execution.
+  - No advanced feedback on automation progress.
+
+---
+
+### **Version 2: Advanced Automation**
+- **Improvements**:
+  - **Device-Based Search Topics**:
+    - Automatically switches between **mobile** and **desktop** topics based on the device.
+    - Topics are updated daily, using a unique query generator with 930 topics.
+  - **Enhanced Timer Options**:
+    - Customizable timer ranges for precise control over search intervals.
+    - Intelligent scheduling of cycles with resting periods.
+  - **Dynamic State Management**:
+    - Supports pausing, resuming, and stopping automation seamlessly.
+    - Provides logs for active automation types and progress tracking.
+  - **Improved Multi-Cycle Execution**:
+    - Handles overlapping cycles to avoid duplicate execution.
+    - Dynamically adjusts timers to respect daily limits.
 
 ---
 
@@ -54,13 +90,11 @@
 
    - Open the extension popup and select the type of automation you want:
      - **Custom Timer**: Specify the number of searches and the timer in seconds.
-     - **Pre-Defined Timer**: Runs with a fixed limit of 3 searches every 15 minutes.
-     - **No Timer**: Opens tabs and performs searches all at once.
+     - **Built-in Timer**: Runs with a fixed limit of 3 searches every 15 minutes.
 
 2. **Stop/Close Automation**
 
    - Use the **Stop Automation** button to stop the searches.
-   - Use the **Close Automation** button to close all automated tabs.
 
 3. **Monitor Search Progress**
 
@@ -90,4 +124,8 @@
 <br/><hr/>
 <div align="center">
   <img src="images/Final_Out.png" alt="Logo">
+</div>
+<br/><hr/>
+<div align="center">
+  <img src="images/Final_Out_Old.png" alt="Logo">
 </div>
