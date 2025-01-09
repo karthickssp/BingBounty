@@ -60,6 +60,8 @@
   - **Improved Multi-Cycle Execution**:
     - Handles overlapping cycles to avoid duplicate execution.
     - Dynamically adjusts timers to respect daily limits.
+  
+  **Note: Mobile version is working only in Edge canary Browser**
 
 ---
 
