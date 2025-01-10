@@ -50,9 +50,6 @@ function updateUI(searchCount, searchLimit) {
       searchLimit > 0 ? (searchCount / searchLimit) * 100 : 0;
     progressBarFill.style.width = Math.min(progressPercent, 100) + "%";
   }
-  console.log(
-    `Updated UI: SearchCount = ${searchCount}, RemainingCount = ${remainingCount}`
-  );
 }
 
 // Get values from local storage
@@ -74,6 +71,8 @@ chrome.storage.sync.get(
     } else {
       searchCount = data.lastSearchCount || 0;
     }
+    username = data.username;
+    headerName.textContent = data.username;
     searchDeviceDropdown.value = data.searchDevice;
     searchCountDropdown.value = data.searchCount || 0;
     timerDropdown.value = data.customTimer > 0 ? data.customTimer / 1000 : 0;
@@ -81,21 +80,12 @@ chrome.storage.sync.get(
     searchLimit = parseInt(data.searchCount, 10) || 0;
     focusTabsCheckbox.checked = data.focusTabs;
     builtinTimerCheckbox.checked = data.builtinTimer;
-    username = data.username;
-    console.log("Username: ", data.username);
-    console.log("Search Device: ", data.searchDevice);
-    console.log("Search limit: ", searchLimit);
-    console.log("Custom timer: ", data.customTimer);
-    console.log("Searched Query count: ", data.searchCount);
-    console.log("Focus tabs: ", data.focusTabs);
-    console.log("Builtin Timer: ", data.builtinTimer);
-    console.log("Last date: ", data.lastDate);
-    headerName.textContent = data.username;
     limitInfo.style.display = searchLimit > 0 ? "none" : "block";
     if (searchLimit === 0) {
       limitInfo.textContent =
         "Please set all the values to start the automation.";
     }
+    logInfo(data);
     updateUI(searchCount, searchLimit);
   }
 );
@@ -106,70 +96,52 @@ saveButton.addEventListener("click", () => {
   const customTimer = getTimerValue();
   const searchDevice = searchDeviceDropdown.value;
   if (isNaN(newSearchLimit) || newSearchLimit <= 0) {
-    alert("Please enter a valid search count.");
-    return;
+    return alert("Please enter a valid search count.");
   }
-  if (searchDevice === "null" || !searchDevice) {
-    alert("Please select the device.");
-    return;
+  if (!searchDevice || searchDevice === "null") {
+    return alert("Please select the device.");
   }
   if (username === "Store the email id...") {
     username = prompt("Please enter your email id to proceed.");
-    if (username && username.includes("@") && username.includes(".")) {
-      chrome.storage.sync.set(
-        {
-          username: username,
-          searchDevice: searchDevice,
-          searchCount: newSearchLimit,
-          customTimer: customTimer,
-          focusTabs: focusTabsCheckbox.checked,
-          builtinTimer: builtinTimerCheckbox.checked,
-          lastDate: today,
-          lastSearchCount: searchCount,
-        },
-        () => {
-          headerName.textContent = username;
-          updateUI(0, newSearchLimit);
-          console.log("Search device: ", searchDevice);
-          console.log("Search limit: ", newSearchLimit);
-          console.log("Custom timer: ", customTimer);
-          console.log("Searched Query count: ", searchCount);
-          console.log("Focus tabs: ", focusTabs.checked);
-          console.log("Builtin Timer: ", builtinTimer.checked);
-          console.log("Last date: ", today);
-          alert("Settings Saved!!! Please refresh the page.");
-        }
-      );
-    } else {
+    if (!username || !username.includes("@") || !username.includes(".")) {
       username = "Store the email id...";
       return;
     }
-  } else {
-    chrome.storage.sync.set(
-      {
-        username: username,
-        searchDevice: searchDevice,
-        searchCount: newSearchLimit,
-        customTimer: customTimer,
-        focusTabs: focusTabsCheckbox.checked,
-        builtinTimer: builtinTimerCheckbox.checked,
-        lastDate: today,
-        lastSearchCount: searchCount,
-      },
-      () => {
-        updateUI(searchCount, newSearchLimit);
-        console.log("Search device: ", searchDevice);
-        console.log("Search limit: ", newSearchLimit);
-        console.log("Custom timer: ", customTimer);
-        console.log("Searched Query count: ", searchCount);
-        console.log("Focus tabs: ", focusTabs.checked);
-        console.log("Builtin Timer: ", builtinTimer.checked);
-        console.log("Last date: ", today);
-        alert("Settings Saved!!! Please refresh the page.");
-      }
-    );
   }
+
+  const settings = {
+    username,
+    searchDevice,
+    searchCount: newSearchLimit,
+    customTimer,
+    focusTabs: focusTabsCheckbox.checked,
+    builtinTimer: builtinTimerCheckbox.checked,
+    lastDate: today,
+    lastSearchCount: searchCount,
+  };
+
+  chrome.storage.sync.set(settings, () => {
+    headerName.textContent = username;
+    updateUI(searchCount, newSearchLimit);
+    logInfo(settings);
+    alert("Settings Saved!!! Please refresh the page.");
+  });
 });
+
+// Utility function to log debug information
+function logInfo(data) {
+  console.log(`
+==================== System Info ====================
+  Username           : ${data.username}
+  Search Device      : ${data.searchDevice}
+  Search Limit       : ${data.searchCount}
+  Custom Timer       : ${data.customTimer}
+  Focus Tabs         : ${data.focusTabs}
+  Builtin Timer      : ${data.builtinTimer}
+  Last Date          : ${data.lastDate}
+====================================================
+  `);
+}
 
 // Reset all automation tasks
 restButton.addEventListener("click", () => {
@@ -243,7 +215,7 @@ startProcess.addEventListener("click", () => {
   } else if (isPaused) {
     // Resume Automation
     isPaused = false;
-    console.log("Resume Automation is triggered.");
+    // console.log("Resume Automation is triggered.");
     startProcess.textContent = "Pause Automation";
     chrome.runtime.sendMessage({
       action: "resumeAutomation",
@@ -252,7 +224,7 @@ startProcess.addEventListener("click", () => {
   } else {
     // Pause Automation
     isPaused = true;
-    console.log("Pause Automation is triggered.");
+    // console.log("Pause Automation is triggered.");
     startProcess.textContent = "Resume Automation";
     chrome.runtime.sendMessage({
       action: "pauseAutomation",
@@ -288,11 +260,6 @@ chrome.runtime.onMessage.addListener((message) => {
             startProcess.textContent = "Start Automation";
           }
           updateUI(searchCount + 1, searchLimit);
-          console.log(
-            `Search count updated to ${
-              searchCount + 1
-            } of total limit ${searchLimit}`
-          );
         });
       }
     );

@@ -2,6 +2,8 @@ import { mobileTopics } from "./MobileTopics.js";
 import { desktopTopics } from "./DesktopTopics.js";
 let searchesCycle = 0;
 let currentIndex = 0;
+let minTimer = 0;
+let maxTimer = 0;
 let automationState = {
   isPaused: false,
   activeAutomation: null,
@@ -46,7 +48,7 @@ chrome.runtime.onMessage.addListener((message) => {
       automationState.isPaused = false;
       console.log(`Resumed ${message.type} automation.`);
       break;
-    case "stopAutomation": 
+    case "stopAutomation":
       automationState.isPaused = false;
       stopAutomation();
       break;
@@ -61,32 +63,40 @@ function getRandomTimer(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function startCustomAutomation(searchCount, timerRange) {
+// Function to start automation with a custom timer
+async function startCustomAutomation(searchCount, timerRange) {
   stopAutomation();
-  const minTimer = Math.abs(timerRange - 500);
-  const maxTimer = Math.abs(timerRange + 4128);
   automationState.searchesRemaining = searchCount;
+  minTimer = Math.abs(timerRange - 500);
+  maxTimer = Math.abs(timerRange + 4128);
+  await performCustomSearch();
+}
 
-  function performCustomSearch() {
-    if (automationState.isPaused) return;
-    if (automationState.searchesRemaining <= 0) {
-      console.log(
-        "Search automation with custom timer is completed successfully."
-      );
-      stopAutomation();
-      return;
+async function performCustomSearch() {
+  while (automationState.searchesRemaining > 0) {
+    if(automationState.isPaused){
+      await waitUntilResumed();
     }
     performSearch();
     automationState.searchesRemaining--;
-    console.log(`Searches remaining: ${automationState.searchesRemaining}`);
     const nextTimer = getRandomTimer(minTimer, maxTimer);
-    console.log(`Next search will occur in ${nextTimer} ms.`);
-    setTimeout(performCustomSearch, nextTimer);
+    for (let elapsed = 0; elapsed < nextTimer; elapsed += 500) {
+      if (automationState.isPaused) {
+        await waitUntilResumed();
+      }
+      await delay(500);
+    }
   }
-  performCustomSearch();
+  if (automationState.searchesRemaining <= 0) {
+    console.log(
+      "Search automation with custom time is completed successfully."
+    );
+    stopAutomation();
+    return;
+  }
 }
 
-// Start automation with a predefined timer with async & await (find proper implementation)
+// Start automation with a predefined timer
 async function startPreDefinedAutomation(searchCount) {
   stopAutomation();
   automationState.searchesRemaining = searchCount;
@@ -96,6 +106,9 @@ async function startPreDefinedAutomation(searchCount) {
 
 async function initiateSearchCycle() {
   while (automationState.searchesRemaining > 0) {
+    if (automationState.isPaused) {
+      await waitUntilResumed();
+    }
     searchesCycle++;
     for (
       let i = 0;
@@ -104,14 +117,20 @@ async function initiateSearchCycle() {
     ) {
       performSearch();
       automationState.searchesRemaining--;
-      console.log(`Searches remaining: ${automationState.searchesRemaining}`);
-      await new Promise((resolve) =>
-        setTimeout(resolve, getRandomTimer(15000, 32000))
-      );
+      for (let elapsed = 0; elapsed < getRandomTimer(15000, 32000); elapsed += 500) {
+        if (automationState.isPaused) {
+          await waitUntilResumed();
+        }
+        await delay(500);
+      }
     }
     console.log(`Search cycle: ${searchesCycle}`);
-    await new Promise((resolve) => setTimeout(resolve, restPeriod));
-    console.log("Search cycle completed. Starting the next cycle.");
+    for (let elapsed = 0; elapsed < restPeriod; elapsed += 500) {
+      if (automationState.isPaused) {
+        await waitUntilResumed();
+      }
+      await delay(500);
+    }
   }
   if (automationState.searchesRemaining <= 0) {
     console.log(
@@ -122,6 +141,18 @@ async function initiateSearchCycle() {
   }
 }
 
+// Wait until automation is resumed
+async function waitUntilResumed() {
+  while (automationState.isPaused) {
+    await delay(500);
+  }
+}
+
+// Delay function
+async function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // Perform search on single Tab
 let searchTabId = null;
 
@@ -130,7 +161,7 @@ function performSearch() {
   if (searchTabId !== null) {
     chrome.search.query({ text: query, tabId: searchTabId }, () => {
       console.log(
-        `Search performed for: ${query} at ${new Date().toLocaleTimeString()}`
+        `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${automationState.searchesRemaining}`
       );
     });
   } else {
@@ -141,7 +172,7 @@ function performSearch() {
         searchTabId = newTab.id; // Store the new tab's ID
         chrome.search.query({ text: query, tabId: newTab.id }, () => {
           console.log(
-            `Search performed for: ${query} at ${new Date().toLocaleTimeString()}`
+            `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${automationState.searchesRemaining}`
           );
         });
       });

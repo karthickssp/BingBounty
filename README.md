@@ -27,7 +27,7 @@
 - **Secure & Private**: No data is collected from the user; BingBounty only interacts with the Bing search engine to perform searches.
 - Automates up to **30 searches per day** with customizable timers.
 - Supports both **mobile and desktop** search topics with seamless device switching.
-- **Includes safety features such as **pause/resume, stop, and cycle limits**.
+- Includes safety features such as **pause/resume, stop, and cycle limits**.
 
 ---
 
