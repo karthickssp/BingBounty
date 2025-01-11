@@ -15,7 +15,10 @@ const limitInfo = document.getElementById("limitInfo");
 const startProcess = document.getElementById("task-btn");
 const stopProcess = document.getElementById("stop-btn");
 const closeBtn = document.getElementById("close-btn");
+const restPeriod = 850000;
+const maxSearchesPerCycle = 4;
 
+let isMobile = false;
 let searchLimit = 0;
 let searchCount = 0;
 let isAutomationRunning = false;
@@ -30,21 +33,6 @@ let automationState = {
   searchInterval: null,
   searchesRemaining: 0,
 };
-const restPeriod = 850000;
-const maxSearchesPerCycle = 4;
-const device = chrome.storage.sync.get("device", (data) => {
-  return data.device;
-});
-const isMobile = device === "mobile";
-const todayLast = new Date().getDate() + 1;
-const topics = isMobile ? mobileTopics : desktopTopics;
-const start = isMobile
-  ? Math.max((todayLast - 1) * 20, 0)
-  : Math.max((todayLast - 1) * 30, 0);
-const end = isMobile
-  ? Math.min(start + 20, topics.length)
-  : Math.min(start + 30, topics.length);
-const dayTopics = topics.slice(start, end);
 
 // Custom timer Input visibility
 timerDropdown.addEventListener("change", () => {
@@ -112,10 +100,21 @@ chrome.storage.sync.get(
       limitInfo.textContent =
         "Please set all the values to start the automation.";
     }
+    isMobile = data.searchDevice == "mobile";
     logInfo(data);
     updateUI(searchCount, searchLimit);
   }
 );
+
+const todayLast = new Date().getDate() + 1;
+const topics = isMobile ? mobileTopics : desktopTopics;
+const start = isMobile
+  ? Math.max((todayLast - 1) * 20, 0)
+  : Math.max((todayLast - 1) * 30, 0);
+const end = isMobile
+  ? Math.min(start + 20, topics.length)
+  : Math.min(start + 30, topics.length);
+const dayTopics = topics.slice(start, end);
 
 // Save all the values to local storage
 saveButton.addEventListener("click", () => {
@@ -442,14 +441,19 @@ function stopAutomation() {
 function closeAutomation() {
   chrome.tabs.query({}, (tabs) => {
     if (isMobile) {
+      const emptyTab = chrome.tabs.create({ url: "edge://newtab" });
       tabs.forEach((tab) => {
-        chrome.tabs.remove(tab.id);
+        if (!emptyTab || tab.id !== emptyTab.id) {
+          chrome.tabs.remove(tab.id);
+        }
       });
-      chrome.tabs.create({ url: "about:blank" });
     } else {
-      const bingTab = tabs.find(
+      let bingTab = tabs.find(
         (tab) => tab.url && tab.url.includes("rewards.bing.com")
       );
+      if (!bingTab) {
+        bingTab = chrome.tabs.create({ url: "edge://newtab" });
+      }
       tabs.forEach((tab) => {
         if (!bingTab || tab.id !== bingTab.id) {
           chrome.tabs.remove(tab.id);
