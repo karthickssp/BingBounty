@@ -13,14 +13,16 @@ body {
 }
 
 .container-body {
-  width: 350px;
+  margin-top: 50px;
+  width: 750px;
+  height: auto;
   padding: 10px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .header {
@@ -30,13 +32,13 @@ body {
 }
 
 .header img {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
 }
 
 .header h1 {
-  margin-left: 20px;
+  margin-left: 50px;
   color: #0078d4;
 }
 
@@ -54,7 +56,7 @@ body {
 }
 
 .actions-top {
-  width: 103px;
+  width: 150px;
 }
 
 .actions-middle {
@@ -79,6 +81,7 @@ label {
   border-radius: 4px;
   font-size: 14px;
   width: 100%;
+  margin-top: 8px;
 }
 
 input[type="number"] {
@@ -90,7 +93,7 @@ input[type="number"] {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 40px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
@@ -106,7 +109,7 @@ input[type="number"] {
   background-color: #9b59b6;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 40px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
@@ -119,13 +122,14 @@ input[type="number"] {
 }
 #limitInfo {
   color: red;
-  font-size: 14 px;
+  font-size: 16 px;
   text-align: center;
 }
 .progress-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 10px;
 }
 
 .progress-info {
@@ -154,7 +158,7 @@ input[type="number"] {
 
 .progress-bar {
   width: 90%;
-  height: 16px;
+  height: 20px;
   background-color: #fc0505;
   border-radius: 10px;
   margin: 0 auto 10px;
@@ -171,7 +175,7 @@ input[type="number"] {
 .actions-body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 #task-btn {
@@ -194,8 +198,6 @@ input[type="number"] {
   background-color: #fc0505;
   color: white;
   border: none;
-  width: 280px;
-  height: 34px;
   width: 280px;
   height: 34px;
   border-radius: 4px;
@@ -227,12 +229,11 @@ input[type="number"] {
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 10px 20px;
   border-top: 1px solid #ddd;
-  font-size: 14px;
+  font-size: 16px;
   color: #555;
-  position: relative;
   text-align: center;
   font-size: 16px;
 }
@@ -254,7 +255,6 @@ input[type="number"] {
 .github-logo {
   width: 40px;
   height: 40px;
-  margin-left: 25px;
   transition: transform 0.3s;
 }
 
@@ -268,20 +268,12 @@ input[type="number"] {
   border-radius: 65px;
   border-style: none;
   flex-shrink: 0;
-  height: 26px;
-  width: 45px;
+  height: 28px;
+  width: 54px;
   margin: 0;
   margin-left: 20px;
+  margin-top: 5px;
   position: relative;
-}
-
-.checkbox-wrapper-2 .custom_check::before {
-  bottom: -6px;
-  content: "";
-  left: -6px;
-  position: absolute;
-  right: -6px;
-  top: -6px;
 }
 
 .checkbox-wrapper-2 .custom_check,
@@ -293,15 +285,15 @@ input[type="number"] {
   background-color: #0078d4;
   border-radius: 50%;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 22px;
+  width: 22px;
   left: 3px;
   position: absolute;
-  top: 4px;
+  top: 3px;
 }
 
 .checkbox-wrapper-2 input[type="checkbox"] {
-  cursor: default;
+  cursor: pointer;
 }
 
 .checkbox-wrapper-2 .custom_check:hover {
@@ -315,7 +307,7 @@ input[type="number"] {
 
 .checkbox-wrapper-2 .custom_check:checked::after {
   background-color: #fff;
-  left: 23px;
+  left: 29px;
 }
 
 .checkbox-wrapper-2 :focus:not(.focus-visible) {
@@ -331,4 +323,69 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@media (max-width: 480px) {
+  .container-body {
+    margin-top: 20px;
+    width: 350px;
+    gap: 8px;
+  }
+  .header img {
+    width: 70px;
+    height: 70px;
+  }
+  .header h1 {
+    margin-left: 20px;
+  }
+  .actions-top {
+    width: 103px;
+  }
+  .input-dropdown select,
+  .input-dropdown input,
+  .switch {
+    margin-top: 4px;
+  }
+
+  #save-btn {
+    padding: 8px 12px;
+  }
+
+  #reset-btn {
+    padding: 8px 12px;
+  }
+
+  #limitInfo {
+    font-size: 14px;
+  }
+  .progress-container {
+    margin-top: 2px;
+  }
+  .progress-bar {
+    height: 16px;
+  }
+  .actions-body {
+    gap: 10px;
+  }
+  .footer {
+    font-size: 14px;
+  }
+  .github-logo {
+    margin-left: 25px;
+  }
+  .checkbox-wrapper-2 .custom_check {
+    /* height: 24px; 
+  width: 46px; */
+    height: 26px;
+    width: 45px;
+    margin-top: 1px;
+  }
+  .checkbox-wrapper-2 .custom_check::after {
+    height: 18px;
+    width: 18px;
+    top: 4px;
+  }
+  .checkbox-wrapper-2 .custom_check:checked::after {
+    left: 23px;
+  }
 }

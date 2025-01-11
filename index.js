@@ -1,4 +1,4 @@
-import { mobileTopics, desktopTopics } from './data.js';
+import { mobileTopics, desktopTopics } from "./data.js";
 
 const today = new Date().getDate();
 const headerName = document.getElementById("header-span");
@@ -260,8 +260,10 @@ stopProcess.addEventListener("click", () => {
 
 // Cose all opened tabs
 closeBtn.addEventListener("click", () => {
-  if(isAutomationRunning) {
-    alert("Please stop the running automation process before closing the tabs.");
+  if (isAutomationRunning) {
+    alert(
+      "Please stop the running automation process before closing the tabs."
+    );
     return;
   }
   closeAutomation();
@@ -439,12 +441,21 @@ function stopAutomation() {
 // Close all opened tabs
 function closeAutomation() {
   chrome.tabs.query({}, (tabs) => {
-    const bingTab = tabs.find(tab => tab.url && tab.url.includes('rewards.bing.com'));
-    tabs.forEach(tab => {
-      if (!bingTab || tab.id !== bingTab.id) {
+    if (isMobile) {
+      tabs.forEach((tab) => {
         chrome.tabs.remove(tab.id);
-      }
-    });
+      });
+      chrome.tabs.create({ url: "about:blank" });
+    } else {
+      const bingTab = tabs.find(
+        (tab) => tab.url && tab.url.includes("rewards.bing.com")
+      );
+      tabs.forEach((tab) => {
+        if (!bingTab || tab.id !== bingTab.id) {
+          chrome.tabs.remove(tab.id);
+        }
+      });
+    }
     console.log("All opened tabs are closed successfully.");
   });
 }
