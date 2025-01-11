@@ -1,11 +1,5 @@
-//popup.js
+import { mobileTopics, desktopTopics } from "./data.js";
 
-let searchLimit = 0;
-let searchCount = 0;
-let isPaused = false;
-let activeAutomation = null;
-let isAutomationRunning = false;
-let username = "Store the email id...";
 const today = new Date().getDate();
 const headerName = document.getElementById("header-span");
 const searchDeviceDropdown = document.getElementById("searchDevice");
@@ -21,6 +15,24 @@ const limitInfo = document.getElementById("limitInfo");
 const startProcess = document.getElementById("task-btn");
 const stopProcess = document.getElementById("stop-btn");
 const closeBtn = document.getElementById("close-btn");
+const restPeriod = 850000;
+const maxSearchesPerCycle = 4;
+
+let isMobile = false;
+let searchLimit = 0;
+let searchCount = 0;
+let isAutomationRunning = false;
+let username = "Store the email id...";
+let searchesCycle = 0;
+let currentIndex = 0;
+let minTimer = 0;
+let maxTimer = 0;
+let automationState = {
+  isPaused: false,
+  activeAutomation: null,
+  searchInterval: null,
+  searchesRemaining: 0,
+};
 
 // Custom timer Input visibility
 timerDropdown.addEventListener("change", () => {
@@ -88,16 +100,28 @@ chrome.storage.sync.get(
       limitInfo.textContent =
         "Please set all the values to start the automation.";
     }
+    isMobile = data.searchDevice == "mobile";
     logInfo(data);
     updateUI(searchCount, searchLimit);
   }
 );
+
+const todayLast = new Date().getDate() + 1;
+const topics = isMobile ? mobileTopics : desktopTopics;
+const start = isMobile
+  ? Math.max((todayLast - 1) * 20, 0)
+  : Math.max((todayLast - 1) * 30, 0);
+const end = isMobile
+  ? Math.min(start + 20, topics.length)
+  : Math.min(start + 30, topics.length);
+const dayTopics = topics.slice(start, end);
 
 // Save all the values to local storage
 saveButton.addEventListener("click", () => {
   const newSearchLimit = parseInt(searchCountDropdown.value, 10);
   const customTimer = getTimerValue();
   const searchDevice = searchDeviceDropdown.value;
+  searchCount = 0;
   if (isNaN(newSearchLimit) || newSearchLimit <= 0) {
     return alert("Please enter a valid search count.");
   }
@@ -138,6 +162,7 @@ function logInfo(data) {
   Username           : ${data.username}
   Search Device      : ${data.searchDevice}
   Search Limit       : ${data.searchCount}
+  Last Search count  : ${data.lastSearchCount}
   Custom Timer       : ${data.customTimer}
   Focus Tabs         : ${data.focusTabs}
   Builtin Timer      : ${data.builtinTimer}
@@ -183,15 +208,13 @@ startProcess.addEventListener("click", () => {
         alert("Please enter a valid search count.");
         return;
       }
-      searchCount = 0; // search count starts from the beginning
+      searchCount = 0;
       searchLimit = newSearchLimit;
-      activeAutomation = "builtinTimer";
       updateUI(searchCount, searchLimit);
       console.log("Start Builtin Timer Automation is triggered.");
-      chrome.runtime.sendMessage({
-        action: "startBuiltinTimer",
-        searchCount: searchLimit,
-      });
+      automationState.isPaused = false;
+      automationState.activeAutomation = "builtinTimer";
+      startPreDefinedAutomation(searchLimit);
     } else {
       if (
         isNaN(customTimer) ||
@@ -202,151 +225,70 @@ startProcess.addEventListener("click", () => {
         alert("Please enter a valid timer and search count.");
         return;
       }
-      searchCount = 0; // search count starts from the beginning
+      searchCount = 0;
       searchLimit = newSearchLimit;
-      activeAutomation = "customTimer";
       updateUI(searchCount, searchLimit);
       console.log("Start Custom automation process is triggered.");
-      chrome.runtime.sendMessage({
-        action: "startCustomTimer",
-        searchCount: searchLimit,
-        customTimer: customTimer,
-      });
+      automationState.isPaused = false;
+      automationState.activeAutomation = "customTimer";
+      startCustomAutomation(searchLimit, customTimer);
     }
     isAutomationRunning = true;
     startProcess.textContent = "Pause Automation";
-  } else if (isPaused) {
-    // Resume Automation
-    isPaused = false;
-    // console.log("Resume Automation is triggered.");
+  } else if (automationState.isPaused) {
+    automationState.isPaused = false;
     startProcess.textContent = "Pause Automation";
-    chrome.runtime.sendMessage({
-      action: "resumeAutomation",
-      type: activeAutomation,
-    });
+    automationState.isPaused = false;
+    console.log(`Resumed ${automationState.activeAutomation} automation.`);
   } else {
-    // Pause Automation
-    isPaused = true;
-    // console.log("Pause Automation is triggered.");
+    automationState.isPaused = true;
     startProcess.textContent = "Resume Automation";
-    chrome.runtime.sendMessage({
-      action: "pauseAutomation",
-      type: activeAutomation,
-    });
+    automationState.isPaused = true;
+    console.log(`Paused ${automationState.activeAutomation} automation.`);
   }
 });
 
 // Stop all the process
 stopProcess.addEventListener("click", () => {
   console.log("Stop Automation is triggered.");
-  isPaused = false;
+  automationState.isPaused = false;
   isAutomationRunning = false;
   startProcess.textContent = "Start Automation";
-  chrome.runtime.sendMessage({ action: "stopAutomation" });
+  stopAutomation();
 });
 
-// Close all the opened tabs
+// Cose all opened tabs
 closeBtn.addEventListener("click", () => {
-  chrome.runtime.sendMessage({ action:"closeTabs"});
-})
-
-// Listener for background messages to update progress
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action == "incrementsearchCount") {
-    chrome.storage.sync.get(
-      {
-        searchCount: 0,
-        lastSearchCount: 0,
-      },
-      (data) => {
-        searchCount = data.lastSearchCount || 0;
-        searchLimit = data.searchCount || 0;
-        chrome.storage.sync.set({ lastSearchCount: searchCount + 1 }, () => {
-          if (searchCount + 1 == searchLimit) {
-            isAutomationRunning = false;
-            isPaused = false;
-            startProcess.textContent = "Start Automation";
-          }
-          updateUI(searchCount + 1, searchLimit);
-        });
-      }
+  if (isAutomationRunning) {
+    alert(
+      "Please stop the running automation process before closing the tabs."
     );
+    return;
   }
+  closeAutomation();
 });
 
-
-
-
-
-
-
-// background.js
-
-import { mobileTopics, desktopTopics } from './data.js';
-let searchesCycle = 0;
-let currentIndex = 0;
-let minTimer = 0;
-let maxTimer = 0;
-let automationState = {
-  isPaused: false,
-  activeAutomation: null,
-  searchInterval: null,
-  searchesRemaining: 0,
-};
-const restPeriod = 850000;
-const maxSearchesPerCycle = 4;
-const device = chrome.storage.sync.get("device", (data) => {
-  return data.device;
-});
-const isMobile = device === "mobile";
-const todayLast = new Date().getDate() + 1;
-const topics = isMobile ? mobileTopics : desktopTopics;
-const start = isMobile
-  ? Math.max((todayLast - 1) * 20, 0)
-  : Math.max((todayLast - 1) * 30, 0);
-const end = isMobile
-  ? Math.min(start + 20, topics.length)
-  : Math.min(start + 30, topics.length);
-const dayTopics = topics.slice(start, end);
-console.log(`topics length: ${topics.length}`);
-
-chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
-});
-
-// Chrome message listener
-chrome.runtime.onMessage.addListener((message) => {
-  switch (message.action) {
-    case "startCustomTimer":
-      automationState.isPaused = false;
-      automationState.activeAutomation = "customTimer";
-      startCustomAutomation(message.searchCount, message.customTimer);
-      break;
-    case "startBuiltinTimer":
-      automationState.isPaused = false;
-      automationState.activeAutomation = "builtinTimer";
-      startPreDefinedAutomation(message.searchCount);
-      break;
-    case "pauseAutomation":
-      automationState.isPaused = true;
-      console.log(`Paused ${message.type} automation.`);
-      break;
-    case "resumeAutomation":
-      automationState.isPaused = false;
-      console.log(`Resumed ${message.type} automation.`);
-      break;
-    case "stopAutomation":
-      automationState.isPaused = false;
-      stopAutomation();
-      break;
-    case "closeTabs":
-      closeAutomation();
-      break;
-    default:
-      console.log("Invalid action.", message.action);
-      break;
-  }
-});
+// Function to increment the search Count and update progress
+function incrementsearchCount() {
+  chrome.storage.sync.get(
+    {
+      searchCount: 0,
+      lastSearchCount: 0,
+    },
+    (data) => {
+      searchCount = data.lastSearchCount || 0;
+      searchLimit = data.searchCount || 0;
+      chrome.storage.sync.set({ lastSearchCount: searchCount + 1 }, () => {
+        if (searchCount + 1 == searchLimit) {
+          isAutomationRunning = false;
+          automationState.isPaused = false;
+          startProcess.textContent = "Start Automation";
+        }
+        updateUI(searchCount + 1, searchLimit);
+      });
+    }
+  );
+}
 
 // Function to generate a random timer within a range (min, max)
 function getRandomTimer(min, max) {
@@ -364,7 +306,7 @@ async function startCustomAutomation(searchCount, timerRange) {
 
 async function performCustomSearch() {
   while (automationState.searchesRemaining > 0) {
-    if(automationState.isPaused){
+    if (automationState.isPaused) {
       await waitUntilResumed();
     }
     performSearch();
@@ -407,7 +349,11 @@ async function initiateSearchCycle() {
     ) {
       performSearch();
       automationState.searchesRemaining--;
-      for (let elapsed = 0; elapsed < getRandomTimer(15000, 32000); elapsed += 500) {
+      for (
+        let elapsed = 0;
+        elapsed < getRandomTimer(15000, 32000);
+        elapsed += 500
+      ) {
         if (automationState.isPaused) {
           await waitUntilResumed();
         }
@@ -451,7 +397,9 @@ function performSearch() {
   if (searchTabId !== null) {
     chrome.search.query({ text: query, tabId: searchTabId }, () => {
       console.log(
-        `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${automationState.searchesRemaining}`
+        `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${
+          automationState.searchesRemaining
+        }`
       );
     });
   } else {
@@ -462,13 +410,15 @@ function performSearch() {
         searchTabId = newTab.id; // Store the new tab's ID
         chrome.search.query({ text: query, tabId: newTab.id }, () => {
           console.log(
-            `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${automationState.searchesRemaining}`
+            `Search performed for: ${query} at ${new Date().toLocaleTimeString()} and total searches Remaining: ${
+              automationState.searchesRemaining
+            }`
           );
         });
       });
     });
   }
-  chrome.runtime.sendMessage({ action: "incrementsearchCount" });
+  incrementsearchCount();
 }
 
 // Generate a search query based on the current date with 930 unique words
@@ -487,15 +437,29 @@ function stopAutomation() {
   console.log("All running tasks are stopped successfully.");
 }
 
-// Close all other opened tabs
+// Close all opened tabs
 function closeAutomation() {
   chrome.tabs.query({}, (tabs) => {
-    const bingTab = tabs.find(tab => tab.url && tab.url.includes('rewards.bing.com'));
-    tabs.forEach(tab => {
-      if (!bingTab || tab.id !== bingTab.id) {
-        chrome.tabs.remove(tab.id);
+    if (isMobile) {
+      const emptyTab = chrome.tabs.create({ url: "edge://newtab" });
+      tabs.forEach((tab) => {
+        if (!emptyTab || tab.id !== emptyTab.id) {
+          chrome.tabs.remove(tab.id);
+        }
+      });
+    } else {
+      let bingTab = tabs.find(
+        (tab) => tab.url && tab.url.includes("rewards.bing.com")
+      );
+      if (!bingTab) {
+        bingTab = chrome.tabs.create({ url: "edge://newtab" });
       }
-    });
+      tabs.forEach((tab) => {
+        if (!bingTab || tab.id !== bingTab.id) {
+          chrome.tabs.remove(tab.id);
+        }
+      });
+    }
     console.log("All opened tabs are closed successfully.");
   });
 }
@@ -505,3 +469,11 @@ chrome.tabs.onRemoved.addListener((tabId) => {
     searchTabId = null;
   }
 });
+
+
+// background.js
+
+chrome.action.onClicked.addListener(() => {
+    chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
+  });
+  
