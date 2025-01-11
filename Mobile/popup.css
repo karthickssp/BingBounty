@@ -13,15 +13,14 @@ body {
 }
 
 .container-body {
-  width: 750px;
-  height: auto;
+  width: 350px;
   padding: 10px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .header {
@@ -31,13 +30,13 @@ body {
 }
 
 .header img {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
 }
 
 .header h1 {
-  margin-left: 50px;
+  margin-left: 20px;
   color: #0078d4;
 }
 
@@ -55,7 +54,7 @@ body {
 }
 
 .actions-top {
-  width: 150px;
+  width: 103px;
 }
 
 .actions-middle {
@@ -67,7 +66,7 @@ body {
   justify-content: center;
 }
 
-label { 
+label {
   font-size: 16px;
   font-weight: bold;
 }
@@ -80,7 +79,6 @@ label {
   border-radius: 4px;
   font-size: 14px;
   width: 100%;
-  margin-top: 8px;
 }
 
 input[type="number"] {
@@ -92,7 +90,7 @@ input[type="number"] {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 40px;
+  padding: 8px 12px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
@@ -108,7 +106,7 @@ input[type="number"] {
   background-color: #9b59b6;
   color: white;
   border: none;
-  padding: 10px 40px;
+  padding: 8px 12px;
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
@@ -121,14 +119,13 @@ input[type="number"] {
 }
 #limitInfo {
   color: red;
-  font-size: 16 px;
+  font-size: 14 px;
   text-align: center;
 }
 .progress-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
 }
 
 .progress-info {
@@ -157,7 +154,7 @@ input[type="number"] {
 
 .progress-bar {
   width: 90%;
-  height: 20px;
+  height: 16px;
   background-color: #fc0505;
   border-radius: 10px;
   margin: 0 auto 10px;
@@ -174,7 +171,7 @@ input[type="number"] {
 .actions-body {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 #task-btn {
@@ -197,6 +194,8 @@ input[type="number"] {
   background-color: #fc0505;
   color: white;
   border: none;
+  width: 280px;
+  height: 34px;
   width: 280px;
   height: 34px;
   border-radius: 4px;
@@ -228,11 +227,12 @@ input[type="number"] {
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 10px 20px;
   border-top: 1px solid #ddd;
-  font-size: 16px;
+  font-size: 14px;
   color: #555;
+  position: relative;
   text-align: center;
   font-size: 16px;
 }
@@ -241,6 +241,8 @@ input[type="number"] {
   font-size: 25px;
 }
 .footer-link {
+  display: flex;
+  align-items: center;
   color: #0078d4;
   transition: color 0.3s;
 }
@@ -252,6 +254,7 @@ input[type="number"] {
 .github-logo {
   width: 40px;
   height: 40px;
+  margin-left: 25px;
   transition: transform 0.3s;
 }
 
@@ -265,12 +268,20 @@ input[type="number"] {
   border-radius: 65px;
   border-style: none;
   flex-shrink: 0;
-  height: 28px;
-  width: 54px;
+  height: 26px;
+  width: 45px;
   margin: 0;
   margin-left: 20px;
-  margin-top: 5px;
   position: relative;
+}
+
+.checkbox-wrapper-2 .custom_check::before {
+  bottom: -6px;
+  content: "";
+  left: -6px;
+  position: absolute;
+  right: -6px;
+  top: -6px;
 }
 
 .checkbox-wrapper-2 .custom_check,
@@ -282,15 +293,15 @@ input[type="number"] {
   background-color: #0078d4;
   border-radius: 50%;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
   left: 3px;
   position: absolute;
-  top: 3px;
+  top: 4px;
 }
 
 .checkbox-wrapper-2 input[type="checkbox"] {
-  cursor: pointer;
+  cursor: default;
 }
 
 .checkbox-wrapper-2 .custom_check:hover {
@@ -304,7 +315,7 @@ input[type="number"] {
 
 .checkbox-wrapper-2 .custom_check:checked::after {
   background-color: #fff;
-  left: 29px;
+  left: 23px;
 }
 
 .checkbox-wrapper-2 :focus:not(.focus-visible) {

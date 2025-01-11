@@ -1,5 +1,4 @@
-import { mobileTopics } from "./MobileTopics.js";
-import { desktopTopics } from "./DesktopTopics.js";
+import { mobileTopics, desktopTopics } from './data.js';
 let searchesCycle = 0;
 let currentIndex = 0;
 let minTimer = 0;
@@ -27,6 +26,10 @@ const end = isMobile
 const dayTopics = topics.slice(start, end);
 console.log(`topics length: ${topics.length}`);
 
+chrome.action.onClicked.addListener(() => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("popup.html") });
+});
+
 // Chrome message listener
 chrome.runtime.onMessage.addListener((message) => {
   switch (message.action) {
@@ -51,6 +54,9 @@ chrome.runtime.onMessage.addListener((message) => {
     case "stopAutomation":
       automationState.isPaused = false;
       stopAutomation();
+      break;
+    case "closeTabs":
+      closeAutomation();
       break;
     default:
       console.log("Invalid action.", message.action);
@@ -195,6 +201,19 @@ function stopAutomation() {
   automationState.searchesRemaining = 0;
   searchesCycle = 0;
   console.log("All running tasks are stopped successfully.");
+}
+
+// Close all other opened tabs
+function closeAutomation() {
+  chrome.tabs.query({}, (tabs) => {
+    const bingTab = tabs.find(tab => tab.url && tab.url.includes('rewards.bing.com'));
+    tabs.forEach(tab => {
+      if (!bingTab || tab.id !== bingTab.id) {
+        chrome.tabs.remove(tab.id);
+      }
+    });
+    console.log("All opened tabs are closed successfully.");
+  });
 }
 
 chrome.tabs.onRemoved.addListener((tabId) => {

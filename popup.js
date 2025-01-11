@@ -18,6 +18,7 @@ const progressBarFill = document.querySelector(".progress-bar-fill");
 const limitInfo = document.getElementById("limitInfo");
 const startProcess = document.getElementById("task-btn");
 const stopProcess = document.getElementById("stop-btn");
+const closeBtn = document.getElementById("close-btn");
 
 // Custom timer Input visibility
 timerDropdown.addEventListener("change", () => {
@@ -241,6 +242,11 @@ stopProcess.addEventListener("click", () => {
   startProcess.textContent = "Start Automation";
   chrome.runtime.sendMessage({ action: "stopAutomation" });
 });
+
+// Close all the opened tabs
+closeBtn.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ action:"closeTabs"});
+})
 
 // Listener for background messages to update progress
 chrome.runtime.onMessage.addListener((message) => {
