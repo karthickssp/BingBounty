@@ -44,6 +44,7 @@ function getTimerValue() {
 function updateUI(searchCount, searchLimit) {
   chrome.storage.sync.set({ lastSearchCount: searchCount });
   const remainingCount = Math.max(searchLimit - searchCount, 0);
+  console.log(`Total searches Remaining: ${remainingCount} of Total search count: ${searchLimit} at the time of ${new Date().toLocaleTimeString()}`);
   document.getElementById("count").textContent = searchCount;
   document.getElementById("remainingCount").textContent = remainingCount;
   if (progressBarFill) {

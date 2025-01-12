@@ -3,6 +3,8 @@ let searchesCycle = 0;
 let currentIndex = 0;
 let minTimer = 0;
 let maxTimer = 0;
+let isMobile = null;
+let dayTopics = null;
 let automationState = {
   isPaused: false,
   activeAutomation: null,
@@ -11,26 +13,27 @@ let automationState = {
 };
 const restPeriod = 850000;
 const maxSearchesPerCycle = 4;
-const isMobile = chrome.storage.sync.get("searchDevice", (data) => {
-  let searchDevice =  data.searchDevice;
-  console.log(`searchDevice: ${searchDevice}`);
-  return searchDevice == "mobile";
-});
-console.log(`isMobile: ${isMobile}`);
-const todayLast = new Date().getDate() + 1;
-const topics = isMobile ? mobileTopics : desktopTopics;
-const start = isMobile
-  ? Math.max((todayLast - 1) * 20, 0)
-  : Math.max((todayLast - 1) * 30, 0);
-const end = isMobile
-  ? Math.min(start + 20, topics.length)
-  : Math.min(start + 30, topics.length);
-const dayTopics = topics.slice(start, end);
-console.log(`topics length: ${topics.length}`);
 
+// Chrome action listener
 chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
 });
+
+// Get the search device from the storage
+chrome.storage.sync.get("searchDevice", (data) => {
+  const searchDevice = data.searchDevice || "desktop";
+  isMobile = searchDevice === "mobile";
+  initializeTopics();
+});
+
+// Initialize topics based on the current date
+function initializeTopics() {
+  const todayLast = new Date().getDate() + 1;
+  const topics = isMobile ? mobileTopics : desktopTopics;
+  const start = isMobile ? Math.max((todayLast - 1) * 20, 0) : Math.max((todayLast - 1) * 30, 0);
+  const end = isMobile ? Math.min(start + 20, topics.length) : Math.min(start + 30, topics.length);
+  dayTopics = topics.slice(start, end);
+}
 
 // Chrome message listener
 chrome.runtime.onMessage.addListener((message) => {
@@ -125,7 +128,7 @@ async function initiateSearchCycle() {
     ) {
       performSearch();
       automationState.searchesRemaining--;
-      for (let elapsed = 0; elapsed < getRandomTimer(15000, 32000); elapsed += 500) {
+      for (let elapsed = 0; elapsed < getRandomTimer(15320, 32430); elapsed += 500) {
         if (automationState.isPaused) {
           await waitUntilResumed();
         }
