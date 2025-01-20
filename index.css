@@ -122,7 +122,13 @@ input[type="number"] {
 }
 #limitInfo {
   color: red;
-  font-size: 16 px;
+  font-size: 16px;
+  text-align: center;
+}
+#timerInfo {
+  color: #0078d4;
+  font-size: 18px;
+  font-weight: bold;
   text-align: center;
 }
 .progress-container {

@@ -95,6 +95,7 @@ async function performCustomSearch() {
       if (automationState.isPaused) {
         await waitUntilResumed();
       }
+      chrome.runtime.sendMessage({ action: "updateTime" });
       await delay(500);
     }
   }
@@ -132,6 +133,7 @@ async function initiateSearchCycle() {
         if (automationState.isPaused) {
           await waitUntilResumed();
         }
+        chrome.runtime.sendMessage({ action: "updateTime" });
         await delay(500);
       }
     }
@@ -140,6 +142,7 @@ async function initiateSearchCycle() {
       if (automationState.isPaused) {
         await waitUntilResumed();
       }
+      chrome.runtime.sendMessage({ action: "updateTime" });
       await delay(500);
     }
   }
@@ -156,6 +159,7 @@ async function initiateSearchCycle() {
 async function waitUntilResumed() {
   while (automationState.isPaused) {
     await delay(500);
+    chrome.runtime.sendMessage({ action: "updateTime" });
   }
 }
 

@@ -16,6 +16,7 @@ const saveButton = document.getElementById("save-btn");
 const restButton = document.getElementById("reset-btn");
 const progressBarFill = document.querySelector(".progress-bar-fill");
 const limitInfo = document.getElementById("limitInfo");
+const timerInfo = document.getElementById("timerInfo");
 const startProcess = document.getElementById("task-btn");
 const stopProcess = document.getElementById("stop-btn");
 const closeBtn = document.getElementById("close-btn");
@@ -52,6 +53,12 @@ function updateUI(searchCount, searchLimit) {
       searchLimit > 0 ? (searchCount / searchLimit) * 100 : 0;
     progressBarFill.style.width = Math.min(progressPercent, 100) + "%";
   }
+}
+
+// Update time every second
+function updateTime() {
+  timerInfo.style.display = activeAutomation != null ? "block":"none";
+  timerInfo.textContent = new Date().toLocaleTimeString();
 }
 
 // Get values from local storage
@@ -219,7 +226,6 @@ startProcess.addEventListener("click", () => {
   } else if (isPaused) {
     // Resume Automation
     isPaused = false;
-    // console.log("Resume Automation is triggered.");
     startProcess.textContent = "Pause Automation";
     chrome.runtime.sendMessage({
       action: "resumeAutomation",
@@ -228,7 +234,6 @@ startProcess.addEventListener("click", () => {
   } else {
     // Pause Automation
     isPaused = true;
-    // console.log("Pause Automation is triggered.");
     startProcess.textContent = "Resume Automation";
     chrome.runtime.sendMessage({
       action: "pauseAutomation",
@@ -242,6 +247,7 @@ stopProcess.addEventListener("click", () => {
   console.log("Stop Automation is triggered.");
   isPaused = false;
   isAutomationRunning = false;
+  activeAutomation = null;
   startProcess.textContent = "Start Automation";
   chrome.runtime.sendMessage({ action: "stopAutomation" });
 });
@@ -278,5 +284,12 @@ chrome.runtime.onMessage.addListener((message) => {
         });
       }
     );
+  }
+});
+
+// Listener for background messages to update time
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action == "updateTime") {
+    updateTime();
   }
 });
