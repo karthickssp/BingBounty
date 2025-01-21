@@ -45,7 +45,9 @@ function getTimerValue() {
 function updateUI(searchCount, searchLimit) {
   chrome.storage.sync.set({ lastSearchCount: searchCount });
   const remainingCount = Math.max(searchLimit - searchCount, 0);
-  console.log(`Total searches Remaining: ${remainingCount} of Total search count: ${searchLimit} at the time of ${new Date().toLocaleTimeString()}`);
+  console.log(
+    `Total searches Remaining: ${remainingCount} of Total search count: ${searchLimit} at the time of ${new Date().toLocaleTimeString()}`
+  );
   document.getElementById("count").textContent = searchCount;
   document.getElementById("remainingCount").textContent = remainingCount;
   if (progressBarFill) {
@@ -57,10 +59,34 @@ function updateUI(searchCount, searchLimit) {
 
 // Update time every second
 function updateTime() {
-  timerInfo.style.display = activeAutomation != null ? "block":"none";
+  timerInfo.style.display = activeAutomation != null ? "block" : "none";
   timerInfo.textContent = new Date().toLocaleTimeString();
 }
 
+//  Update button state
+function updateButtonState() {
+  const buttonToDisable = [saveButton, restButton, closeBtn];
+  const disableState = isAutomationRunning;
+
+  buttonToDisable.forEach((button) => {
+    if (button) {
+      button.disabled = disableState;
+      button.style.cursor = disableState ? "not-allowed" : "pointer";
+    }
+  });
+  if (stopProcess) {
+    stopProcess.disabled = !isAutomationRunning;
+    stopProcess.style.cursor = isAutomationRunning ? "pointer" : "not-allowed";
+  }
+  if (startProcess) {
+    startProcess.textContent = isAutomationRunning
+      ? isPaused
+        ? "Resume Automation"
+        : "Pause Automation"
+      : "Start Automation";
+  }
+}
+updateButtonState();
 // Get values from local storage
 chrome.storage.sync.get(
   {
@@ -222,11 +248,11 @@ startProcess.addEventListener("click", () => {
       });
     }
     isAutomationRunning = true;
-    startProcess.textContent = "Pause Automation";
+    updateButtonState();
   } else if (isPaused) {
     // Resume Automation
     isPaused = false;
-    startProcess.textContent = "Pause Automation";
+    updateButtonState();
     chrome.runtime.sendMessage({
       action: "resumeAutomation",
       type: activeAutomation,
@@ -234,7 +260,7 @@ startProcess.addEventListener("click", () => {
   } else {
     // Pause Automation
     isPaused = true;
-    startProcess.textContent = "Resume Automation";
+    updateButtonState();
     chrome.runtime.sendMessage({
       action: "pauseAutomation",
       type: activeAutomation,
@@ -248,7 +274,7 @@ stopProcess.addEventListener("click", () => {
   isPaused = false;
   isAutomationRunning = false;
   activeAutomation = null;
-  startProcess.textContent = "Start Automation";
+  updateButtonState();
   chrome.runtime.sendMessage({ action: "stopAutomation" });
 });
 
@@ -260,8 +286,8 @@ closeBtn.addEventListener("click", () => {
     );
     return;
   }
-  chrome.runtime.sendMessage({ action:"closeTabs"});
-})
+  chrome.runtime.sendMessage({ action: "closeTabs" });
+});
 
 // Listener for background messages to update progress
 chrome.runtime.onMessage.addListener((message) => {
@@ -278,9 +304,10 @@ chrome.runtime.onMessage.addListener((message) => {
           if (searchCount + 1 == searchLimit) {
             isAutomationRunning = false;
             isPaused = false;
-            startProcess.textContent = "Start Automation";
+            updateButtonState();
           }
           updateUI(searchCount + 1, searchLimit);
+          updateButtonState();
         });
       }
     );
