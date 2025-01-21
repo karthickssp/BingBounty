@@ -19,9 +19,8 @@ chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
 });
 
-// Get the search device and last count from the storage
-chrome.storage.sync.get({searchDevice: null, lastSearchCount:0,}, (data) => {
-  const lastIndex = data.lastSearchCount;
+// Get the search device from the storage
+chrome.storage.sync.get("searchDevice", (data) => {
   const searchDevice = data.searchDevice || "desktop";
   isMobile = searchDevice === "mobile";
   initializeTopics();
