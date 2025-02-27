@@ -125,9 +125,9 @@
 </div>
 <br/><hr/>
 <div align="center">
-  <img src="images/Final_Out.png" alt="Logo">
+  <img src="images/Mobile_Version.png" alt="Logo">
 </div>
 <br/><hr/>
 <div align="center">
-  <img src="images/Final_Out_Old.png" alt="Logo">
+  <img src="images/Previous_Version.png" alt="Logo">
 </div>
